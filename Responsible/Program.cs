@@ -5,10 +5,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
+using Autofac.Extensions.DependencyInjection;
+using Autofac;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
-namespace Responsible
+namespace HELP.UI.Responsible
 {
     public class Program
     {
@@ -18,8 +20,10 @@ namespace Responsible
         }
 
         public static IWebHost BuildWebHost(string[] args) =>
-            WebHost.CreateDefaultBuilder(args)
+            WebHost.CreateDefaultBuilder(args).ConfigureServices(services=>services.AddAutofac())
+                .UseApplicationInsights()
                 .UseStartup<Startup>()
                 .Build();
-    }
+
+        }
 }

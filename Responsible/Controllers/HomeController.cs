@@ -1,25 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using HELP.UI.Responsible.Models;
 using Microsoft.AspNetCore.Mvc;
-using Responsible.Models;
+using System.Diagnostics;
 
-namespace Responsible.Controllers
+namespace HELP.UI.Responsible.Controllers
 {
     public class HomeController : Controller
     {
         public IActionResult Index()
         {
-            return View();
+            return View("Index");
         }
 
         public IActionResult About()
         {
             ViewData["Message"] = "Your application description page.";
 
-            return View();
+            return View("About");
         }
 
         public IActionResult Contact()

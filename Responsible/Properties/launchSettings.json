@@ -15,7 +15,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "Responsible": {
+    "HELP.UI.Responsible": {
       "commandName": "Project",
       "launchBrowser": true,
       "environmentVariables": {

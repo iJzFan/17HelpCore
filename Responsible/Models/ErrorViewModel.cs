@@ -1,6 +1,4 @@
-using System;
-
-namespace Responsible.Models
+namespace HELP.UI.Responsible.Models
 {
     public class ErrorViewModel
     {
