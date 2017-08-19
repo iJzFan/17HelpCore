@@ -1,14 +1,24 @@
-﻿using HELP.UI.Responsible.Models;
+﻿using HELP.BLL.Entity;
+using HELP.BLL.EntityFrameworkCore;
+using HELP.Service.ServiceInterface;
+using HELP.UI.Responsible.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace HELP.UI.Responsible.Controllers
 {
+
     public class HomeController : Controller
     {
+
         public IActionResult Index()
         {
-            return View("Index");
+
+
+            return Redirect("/Problem/Index");
         }
 
         public IActionResult About()

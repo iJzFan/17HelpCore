@@ -3,10 +3,9 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp2.0</TargetFramework>
     <MvcRazorCompileOnPublish>true</MvcRazorCompileOnPublish>
-    <AssetTargetFallback>$(AssetTargetFallback);portable-net45+win8+wp8+wpa81;</AssetTargetFallback>
+    <AssetTargetFallback>%3bnet461%3bportable-net45+win8</AssetTargetFallback>
     <UserSecretsId>aspnet-Responsible-A363B188-208A-4A6A-ADEC-C2653D4F52BD</UserSecretsId>
     <RootNamespace>HELP.UI.Responsible</RootNamespace>
-    <PackageTargetFallback>portable-net45+win8</PackageTargetFallback>
   </PropertyGroup>
 
   <ItemGroup>
@@ -17,10 +16,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="4.2.0" />
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.0-preview2-final" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.0.0-preview2-final" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.0.0-preview2-final" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.0.0-preview2-final" />
+    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="2.0.0-preview3-10055" />
     <PackageReference Include="ZKWeb.System.Drawing" Version="3.0.0" />
   </ItemGroup>
 
@@ -29,11 +30,15 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\EntityFrameworkCore\EntityFrameworkCore.csproj" />
+    <ProjectReference Include="..\ProductionService\ProductionService.csproj" />
+    <ProjectReference Include="..\ServiceInterface\ServiceInterface.csproj" />
     <ProjectReference Include="..\UIDevService\UIDevService.csproj" />
     <ProjectReference Include="..\ViewModel\ViewModel.csproj" />
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Filters\" />
     <Folder Include="Views\Log\" />
   </ItemGroup>
 
