@@ -1,19 +1,18 @@
-﻿using HELP.BLL.EntityFrameworkCore;
-using HELP.Service.ServiceInterface;
+﻿using HELP.BLL.Entity;
+using HELP.BLL.EntityFrameworkCore;
+using HELP.GlobalFile.Global.Encryption;
 using HELP.Service.ProductionService;
+using HELP.Service.ServiceInterface;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Reflection;
-using HELP.GlobalFile.Global.Encryption;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using System.Text;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace HELP.UI.Responsible
 {
@@ -56,11 +55,15 @@ namespace HELP.UI.Responsible
             {
                 // Set a short timeout for easy testing.
                 options.IdleTimeout = TimeSpan.FromSeconds(10);
-                options.CookieHttpOnly = true;
+                options.Cookie.HttpOnly = true;
             });
 
-            services.AddAuthentication().AddCookieAuthentication
-        (options => {
+            services.AddIdentity<User, IdentityRole>()
+       .AddEntityFrameworkStores<EFDbContext>()
+       .AddDefaultTokenProviders();
+
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie(options => {
             options.LoginPath = "/Log/On";
             options.LogoutPath = "/Log/Off";
         });
@@ -103,11 +106,11 @@ namespace HELP.UI.Responsible
             });
             using (var scope = app.ApplicationServices.CreateScope())
             {
-                var contxet = scope.ServiceProvider
+                var context = scope.ServiceProvider
                 .GetRequiredService<EFDbContext>();
-                await contxet.Database.EnsureCreatedAsync();
-                var init = new InitData(contxet);
-                if(!await contxet.Users.AnyAsync())
+                await context.Database.EnsureCreatedAsync();
+                var init = new InitData(context);
+                if(!await context.Users.AnyAsync())
                 init.Initialize();
             }
 
