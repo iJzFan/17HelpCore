@@ -33,7 +33,7 @@ namespace HELP.UI.Responsible
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            
+
             services.AddCors();
             services.AddMvc();
             services.AddEntityFrameworkMySql().AddDbContext<EFDbContext>(options =>
@@ -58,15 +58,12 @@ namespace HELP.UI.Responsible
                 options.Cookie.HttpOnly = true;
             });
 
-            services.AddIdentity<User, IdentityRole>()
-       .AddEntityFrameworkStores<EFDbContext>()
-       .AddDefaultTokenProviders();
-
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-                .AddCookie(options => {
-            options.LoginPath = "/Log/On";
-            options.LogoutPath = "/Log/Off";
-        });
+                .AddCookie(options =>
+                {
+                    options.LoginPath = "/Log/On";
+                    options.LogoutPath = "/Log/Off";
+                });
 
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<ILogService, LogService>();
@@ -75,7 +72,7 @@ namespace HELP.UI.Responsible
             services.AddTransient<ISharedService, SharedService>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddTransient<IEncrypt, SHA512Encrypt>();
-            
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -100,6 +97,31 @@ namespace HELP.UI.Responsible
 
             app.UseMvc(routes =>
             {
+                #region Problem
+
+                routes.MapRoute(
+                    name: "ProblemSingle",
+                    template: "Problem/{id}",
+                    defaults: new { controller = "Problem", action = "Single" },
+                    constraints: new { id = @"\d+" }
+                );
+
+                routes.MapRoute(
+                    name: "ProblemPaged",
+                    template: "Problem/Page-{pageIndex}",
+                    defaults: new { controller = "Problem", action = "Index" },
+                    constraints: new { pageIndex = @"\d+" }
+                );
+
+                routes.MapRoute(
+                    name: "Paged",
+                    template: "{controller}/{action}/Page-{pageIndex}",
+                    defaults: new { },
+                    constraints: new { pageIndex = @"\d+" }
+                );
+
+                #endregion
+
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
@@ -110,8 +132,8 @@ namespace HELP.UI.Responsible
                 .GetRequiredService<EFDbContext>();
                 await context.Database.EnsureCreatedAsync();
                 var init = new InitData(context);
-                if(!await context.Users.AnyAsync())
-                init.Initialize();
+                if (!await context.Users.AnyAsync())
+                    init.Initialize();
             }
 
         }

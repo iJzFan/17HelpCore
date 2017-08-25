@@ -16,6 +16,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Remove="Views\Shared\_LogOnPartial.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.0.0" />
@@ -33,7 +37,6 @@
     <ProjectReference Include="..\EntityFrameworkCore\EntityFrameworkCore.csproj" />
     <ProjectReference Include="..\ProductionService\ProductionService.csproj" />
     <ProjectReference Include="..\ServiceInterface\ServiceInterface.csproj" />
-    <ProjectReference Include="..\UIDevService\UIDevService.csproj" />
     <ProjectReference Include="..\ViewModel\ViewModel.csproj" />
   </ItemGroup>
 
