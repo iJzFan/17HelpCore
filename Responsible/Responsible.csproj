@@ -46,6 +46,7 @@
     <Folder Include="Areas\API\Views\" />
     <Folder Include="Filters\" />
     <Folder Include="Views\Log\" />
+    <Folder Include="Views\Contact\" />
   </ItemGroup>
 
 </Project>
