@@ -97,14 +97,18 @@ namespace HELP.UI.Responsible
 
             app.UseMvc(routes =>
             {
+                routes.MapRoute(
+    name: "API",
+    template: "{area:exists}/{controller=Home}/{id?}");
+
                 #region Problem
 
                 routes.MapRoute(
-                    name: "ProblemSingle",
-                    template: "Problem/{id}",
-                    defaults: new { controller = "Problem", action = "Single" },
-                    constraints: new { id = @"\d+" }
-                );
+                        name: "ProblemSingle",
+                        template: "Problem/{id}",
+                        defaults: new { controller = "Problem", action = "Single" },
+                        constraints: new { id = @"\d+" }
+                    );
 
                 routes.MapRoute(
                     name: "ProblemPaged",
