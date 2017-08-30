@@ -1,5 +1,4 @@
-﻿using HELP.BLL.Entity;
-using HELP.BLL.EntityFrameworkCore;
+﻿using HELP.BLL.EntityFrameworkCore;
 using HELP.GlobalFile.Global.Encryption;
 using HELP.Service.ProductionService;
 using HELP.Service.ServiceInterface;
@@ -7,12 +6,13 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 
 namespace HELP.UI.Responsible
 {
@@ -72,6 +72,8 @@ namespace HELP.UI.Responsible
             services.AddTransient<ISharedService, SharedService>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddTransient<IEncrypt, SHA512Encrypt>();
+            services.AddTransient<IContactService, ContactService>();
+            services.AddTransient<ICreditService, CreditService>();
 
         }
 
@@ -110,20 +112,6 @@ namespace HELP.UI.Responsible
                         constraints: new { id = @"\d+" }
                     );
 
-                routes.MapRoute(
-                    name: "ProblemPaged",
-                    template: "Problem/Page-{pageIndex}",
-                    defaults: new { controller = "Problem", action = "Index" },
-                    constraints: new { pageIndex = @"\d+" }
-                );
-
-                routes.MapRoute(
-                    name: "Paged",
-                    template: "{controller}/{action}/Page-{pageIndex}",
-                    defaults: new { },
-                    constraints: new { pageIndex = @"\d+" }
-                );
-
                 #endregion
 
                 routes.MapRoute(
@@ -134,10 +122,13 @@ namespace HELP.UI.Responsible
             {
                 var context = scope.ServiceProvider
                 .GetRequiredService<EFDbContext>();
-                await context.Database.EnsureCreatedAsync();
-                var init = new InitData(context);
+               await context.Database.EnsureCreatedAsync();
                 if (!await context.Users.AnyAsync())
-                    init.Initialize();
+                {
+                    var init = new InitData(context);
+                    await init.Initialize();
+                }
+                    
             }
 
         }

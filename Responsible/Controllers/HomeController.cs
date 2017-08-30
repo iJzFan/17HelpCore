@@ -23,14 +23,14 @@ namespace HELP.UI.Responsible.Controllers
 
         public IActionResult About()
         {
-            ViewData["Message"] = "Your application description page.";
+            ViewData["Message"] = "ASP.NET Core 演示网站";
 
             return View("About");
         }
 
         public IActionResult Contact()
         {
-            ViewData["Message"] = "Your contact page.";
+            ViewData["Message"] = "唯一联系QQ:337845818.";
 
             return View();
         }
