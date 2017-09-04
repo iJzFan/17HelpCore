@@ -6,16 +6,11 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace HELP.BLL.Entity
 {
-    public class Problem: BaseEntity
+    public class Problem : BaseEntity
     {
-
-
         public string Attachment { get; set; }
 
-
         public int? RewardBestId { get; set; }
-
-        public virtual Comment RewardBest { get; protected internal set; }
 
         public string Title { get; set; }
         public string Body { get; set; }
@@ -24,11 +19,15 @@ namespace HELP.BLL.Entity
         [ForeignKey("UserId")]
         public int UserId { get; set; }
 
-
+        #region Navigation property
         public virtual User Author { get; set; }
 
         public virtual ICollection<Comment> Commnets { get; set; }
 
+        public virtual Comment RewardBest { get; protected internal set; }
+        #endregion
+
+        #region Public method
         public virtual void Publish()
         {
             if (Reward > 0)
@@ -51,5 +50,30 @@ namespace HELP.BLL.Entity
 
             }
         }
+
+        public virtual void Cancel()
+        {
+            //检测求助是否已结贴
+            if (RewardBest != null)
+            {
+                throw new Exception(string.Format(
+                    "求助（id={0}）已因回复（id={1}）酬谢给好心人（id={2}），不可撤销",
+                    Author.Id, RewardBest.Id, RewardBest.Author.Id));
+            }
+
+            //返还悬赏分
+            Credit credit = new Credit
+            {
+                Count = Reward,
+                UserId = UserId
+            };
+            credit.Description =
+                string.Format("撤销悬赏：<a href='/Problem/{0}' target='_blank'>{1}</a>",
+                Id, Title);
+            credit.SetBalance();
+
+            Author.CreditHistory.Add(credit);
+        }
+        #endregion
     }
 }

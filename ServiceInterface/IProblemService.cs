@@ -15,5 +15,7 @@ namespace HELP.Service.ServiceInterface
         Task<CommentsModel> GetComments(int id);
         Task<ViewModel.Shared.Comment.ItemModel> SaveComment(SingleModel model, int problemId);
         Task<int> Reward(int commentId);
+        Task UpdatePicture(int problemId, string attachment);
+        Task Cancel(int problemId);
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HELP.Service.ViewModel.Shared;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -10,8 +11,12 @@ namespace HELP.Service.ViewModel.Problem.Single
         public int Id { get; set; }
         public string Title { get; set; }
         public string Body { get; set; }
+        public int CommentCount { get; set; }
         public int Reward { get; set; }
-        public int AuthorId { get; set; }
-        public string AuthorName { get; set; }
+        public bool HasReward { get; set; }
+        public string Attachment { get; set; }
+        public UserModel Author { get; set; }
+        public UserModel BestKindHearted { get; set; }
+
     }
 }

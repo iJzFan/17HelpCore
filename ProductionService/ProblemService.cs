@@ -4,6 +4,7 @@ using HELP.GlobalFile.Global.Encryption;
 using HELP.Service.ServiceInterface;
 using HELP.Service.ViewModel.Problem;
 using HELP.Service.ViewModel.Problem.Single;
+using HELP.Service.ViewModel.Shared;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -34,19 +35,32 @@ namespace HELP.Service.ProductionService
                 .OrderByDescending(x=>x.CreateTime).Skip((id-1)*pagesize).Take(pagesize)
                 .AsNoTracking().ToListAsync();
 
-            var count = _context.Problems.Count() / pagesize;
+            var count = (int)Math.Ceiling(_context.Problems.Count() / (double)pagesize);
 
             foreach (var problem in problems)
             {
+                var commentcount = await _context.Comments.CountAsync(x => x.ProblemId == problem.Id);
+                var bestkind = await _context.Users.SingleOrDefaultAsync(x => x.Id == problem.RewardBestId);
+                var author = new UserModel();
+                author.Id = problem.Author.Id;
+                author.Name = problem.Author.Name;
+                var bestKindHearted = new UserModel();
+                if (bestkind != null)
+                {
+                    bestKindHearted.Id = bestkind.Id;
+                    bestKindHearted.Name = bestkind.Name;
+                }
                 var item = new ItemModel
                 {
-                    AuthorId = problem.Author.Id,
-                    AuthorName = problem.Author.Name,
+                    Author = author,
                     Body = problem.Body,
                     CreateTime = problem.CreateTime,
                     Id = problem.Id,
                     Reward = problem.Reward,
-                    Title = problem.Title
+                    Title = problem.Title,
+                    Attachment=problem.Attachment,
+                    CommentCount= commentcount,
+                    BestKindHearted=bestKindHearted
                 };
                 list.Add(item);
             }
@@ -74,8 +88,7 @@ namespace HELP.Service.ProductionService
             foreach (var comment in comments)
             {
                 var item = new ViewModel.Shared.Comment.ItemModel();
-                item.AuthorId = comment.Author.Id;
-                item.AuthorName = comment.Author.Name;
+                item.Author = new UserModel { Id = comment.Author.Id, Name = comment.Author.Name };
                 item.Body = comment.Body;
                 item.CreateTime = comment.CreateTime;
                 list.Add(item);
@@ -93,15 +106,27 @@ namespace HELP.Service.ProductionService
         public async Task<ItemModel> GetItem(int id)
         {
             var problem = await _context.Problems.Include(x=>x.Author).SingleOrDefaultAsync(x => x.Id == id);
+            var bestkind = await _context.Users.SingleOrDefaultAsync(x => x.Id == problem.RewardBestId);
+            var commentcount = await _context.Comments.CountAsync(x=>x.ProblemId==id);
+            var author = new UserModel {Id=problem.Author.Id,Name=problem.Author.Name };
+            var bestKindHearted = new UserModel();
+            if (bestkind != null)
+            {
+                bestKindHearted.Id = bestkind.Id;
+                bestKindHearted.Name = bestkind.Name;
+            }
+
             var model = new ItemModel
             {
-                AuthorId = problem.Author.Id,
-                AuthorName = problem.Author.Name,
+                Author=author,
                 Body = problem.Body,
                 CreateTime = problem.CreateTime,
                 Id = problem.Id,
                 Reward = problem.Reward,
-                Title = problem.Title
+                Title = problem.Title,
+                Attachment=problem.Attachment,
+                CommentCount=commentcount,
+                BestKindHearted= bestKindHearted
             };
             return model;
         }
@@ -121,16 +146,16 @@ namespace HELP.Service.ProductionService
                 Title = model.Title,
                 Body = model.Body,
                 UserId = user.Id,
-                //CreateTime = DateTime.Now,
                 Reward = 0,
-                Attachment = attachment
+                Attachment = attachment,
+               
             };
             if (model.Reward.HasValue)
             {
                 problem.Reward = model.Reward.Value;
             }
 
-            var abc = await _context.Problems.AddAsync(problem);
+            await _context.Problems.AddAsync(problem);
             await _context.SaveChangesAsync();
             await _context.Problems.Include(x=>x.Author).ThenInclude(x=>x.CreditHistory).LastOrDefaultAsync(x => x.UserId == user.Id);
             problem.Publish();
@@ -160,15 +185,14 @@ namespace HELP.Service.ProductionService
             return new ViewModel.Shared.Comment.ItemModel
             {
                 Body = comment.Body,
-                AuthorId = author.Id,
-                AuthorName = author.Name,
+                Author=new UserModel { Id=author.Id,Name=author.Name},
                 CreateTime = comment.CreateTime
             };
 
         }
 
         /// <summary>
-        /// 
+        /// 酬谢评论
         /// </summary>
         /// <param name="commentId"></param>
         /// <returns></returns>
@@ -199,6 +223,21 @@ namespace HELP.Service.ProductionService
             await _context.SaveChangesAsync();
 
             return comment.Problem.Reward;
+        }
+
+        public async Task UpdatePicture(int problemId, string attachment)
+        {
+            var problem = await _context.Problems.SingleOrDefaultAsync(x=>x.Id==problemId);
+            problem.Attachment = attachment;
+            _context.Problems.Update(problem);
+            await _context.SaveChangesAsync();
+        }
+        public async Task Cancel(int problemId)
+        {
+            var problem = await _context.Problems.SingleOrDefaultAsync(x => x.Id == problemId);
+
+            _context.Problems.Remove(problem);
+            await _context.SaveChangesAsync();
         }
 
     }
