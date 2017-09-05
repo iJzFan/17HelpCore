@@ -32,10 +32,10 @@ namespace HELP.Service.ProductionService
 
             var id = (await GetCurrentUser()).Id;
             IList<Credit> credits = await _context.Credit.Where(x=>x.UserId==id).OrderByDescending(x=>x.CreateTime).ToListAsync();
-            var indexItemModel = new IndexItemModel();
             var list = new List<IndexItemModel>();
             foreach(var credit in credits)
             {
+                var indexItemModel = new IndexItemModel();
                 indexItemModel.Balance = credit.Balance;
                 indexItemModel.Count = credit.Count;
                 indexItemModel.Description = credit.Description;

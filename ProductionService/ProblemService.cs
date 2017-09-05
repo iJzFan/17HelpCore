@@ -234,8 +234,9 @@ namespace HELP.Service.ProductionService
         }
         public async Task Cancel(int problemId)
         {
-            var problem = await _context.Problems.SingleOrDefaultAsync(x => x.Id == problemId);
 
+            var problem = await _context.Problems.Include(x=>x.Author).ThenInclude(x=>x.CreditHistory).SingleOrDefaultAsync(x => x.Id == problemId);
+            problem.Cancel();
             _context.Problems.Remove(problem);
             await _context.SaveChangesAsync();
         }

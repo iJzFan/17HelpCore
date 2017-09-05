@@ -65,7 +65,8 @@ namespace HELP.BLL.Entity
             Credit credit = new Credit
             {
                 Count = Reward,
-                UserId = UserId
+                UserId = UserId,
+                User=Author
             };
             credit.Description =
                 string.Format("撤销悬赏：<a href='/Problem/{0}' target='_blank'>{1}</a>",
