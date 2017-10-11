@@ -7,6 +7,7 @@ using HELP.BLL.EntityFrameworkCore;
 using HELP.GlobalFile.Global.Encryption;
 using System.Threading.Tasks;
 using HELP.BLL.Entity;
+using Microsoft.AspNetCore.Identity;
 
 namespace HELP.Service.ProductionService
 {
@@ -14,7 +15,7 @@ namespace HELP.Service.ProductionService
     {
 
         #region Constructor
-        public SharedService(EFDbContext context, IHttpContextAccessor httpContextAccessor, IEncrypt encrypt) : base(context, httpContextAccessor, encrypt)
+        public SharedService(EFDbContext _context, IHttpContextAccessor _httpContextAccessor, IEncrypt _encrypt, UserManager<User> _userManager, SignInManager<User> _signInManager) : base(_context, _httpContextAccessor, _encrypt, _userManager, _signInManager)
         {
         }
         #endregion

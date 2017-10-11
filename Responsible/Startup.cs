@@ -1,4 +1,5 @@
-﻿using HELP.BLL.EntityFrameworkCore;
+﻿using HELP.BLL.Entity;
+using HELP.BLL.EntityFrameworkCore;
 using HELP.GlobalFile.Global.Encryption;
 using HELP.Service.ProductionService;
 using HELP.Service.ServiceInterface;
@@ -6,6 +7,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -48,6 +50,23 @@ namespace HELP.UI.Responsible
                         ServiceLifetime.Scoped  //Showing explicitly that the DbContext is shared across the HTTP request scope (graph of objects started in the HTTP request)
                     );
 
+            services.AddIdentity<User, IdentityRole>()
+                .AddEntityFrameworkStores<EFDbContext>();
+            //    .AddDefaultTokenProviders();
+
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.Cookie.Name = CookieAuthenticationDefaults.AuthenticationScheme;
+                options.Cookie.HttpOnly = true;
+                options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
+                options.LoginPath = "/Log/On";
+                options.LogoutPath = "/Log/Off";
+                options.AccessDeniedPath = "/Log/AccessDenied";
+                options.SlidingExpiration = true;
+                // Requires `using Microsoft.AspNetCore.Authentication.Cookies;`
+                options.ReturnUrlParameter = CookieAuthenticationDefaults.ReturnUrlParameter;
+            });
+
             // Adds a default in-memory implementation of IDistributedCache.
             services.AddDistributedMemoryCache();
 
@@ -57,13 +76,6 @@ namespace HELP.UI.Responsible
                 options.IdleTimeout = TimeSpan.FromSeconds(10);
                 options.Cookie.HttpOnly = true;
             });
-
-            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-                .AddCookie(options =>
-                {
-                    options.LoginPath = "/Log/On";
-                    options.LogoutPath = "/Log/Off";
-                });
 
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<ILogService, LogService>();

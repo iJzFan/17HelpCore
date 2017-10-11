@@ -10,13 +10,14 @@ using Microsoft.AspNetCore.Http;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using HELP.BLL.Entity;
+using Microsoft.AspNetCore.Identity;
 
 namespace HELP.Service.ProductionService
 {
     public class ContactService : BaseService, IContactService
     {
         #region Constructor
-        public ContactService(EFDbContext context, IHttpContextAccessor httpContextAccessor, IEncrypt encrypt) : base(context, httpContextAccessor, encrypt)
+        public ContactService(EFDbContext _context, IHttpContextAccessor _httpContextAccessor, IEncrypt _encrypt,UserManager<User> _userManager, SignInManager<User> _signInManager) : base(_context, _httpContextAccessor, _encrypt, _userManager, _signInManager)
         {
         }
         #endregion
@@ -28,7 +29,7 @@ namespace HELP.Service.ProductionService
         /// <returns>RecordModel</returns>
         public async Task<RecordModel> Get()
         {
-            return await Get((await GetCurrentUser()).Id);
+            return await Get(Convert.ToInt32((await GetCurrentUser()).Id));
         }
 
 
@@ -39,7 +40,7 @@ namespace HELP.Service.ProductionService
         /// <returns>RecordModel</returns>
         public async Task<RecordModel> Get(int userId)
         {
-            var user = await _context.Users.Include(x=>x.contact).AsNoTracking().SingleOrDefaultAsync(x => x.Id == userId);
+            var user = await _context.Users.Include(x=>x.contact).AsNoTracking().SingleOrDefaultAsync(x => x.Id == userId.ToString());
             return new RecordModel
             {
                 QQ = user.contact.QQ,

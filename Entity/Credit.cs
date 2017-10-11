@@ -25,7 +25,7 @@ namespace HELP.BLL.Entity
         public string Description { get; set; }
 
         [ForeignKey("UserId")]
-        public int UserId { get; set; }
+        public string UserId { get; set; }
         public virtual User User { get; set; }
 
         public virtual void SetBalance()

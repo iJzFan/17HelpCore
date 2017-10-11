@@ -67,7 +67,7 @@ namespace HELP.BLL.EntityFrameworkCore
                 Body = Problem.PhoneGap_Body,
                 Reward = Problem.PhoneGap_Reward,
                 Title = Problem.PhoneGap_Title,
-                UserId = 2
+                UserId = "2"
             },
                 new Entity.Problem
             {
@@ -75,7 +75,7 @@ namespace HELP.BLL.EntityFrameworkCore
                 Body = Problem.SSCE_Body,
                 Reward = Problem.SSCE_Reward,
                 Title = Problem.SSCE_Title,
-                UserId = 2
+                UserId = "2"
             },
                 new Entity.Problem
             {
@@ -83,7 +83,7 @@ namespace HELP.BLL.EntityFrameworkCore
                 Body = Problem.WebGrease_Body,
                 Reward = Problem.WebGrease_Reward,
                 Title = Problem.WebGrease_Title,
-                UserId = 2
+                UserId = "2"
             },
                 new Entity.Problem
             {
@@ -91,7 +91,7 @@ namespace HELP.BLL.EntityFrameworkCore
                 Body = Problem.WeChat_Body,
                 Reward = Problem.WeChat_Reward,
                 Title = Problem.WeChat_Title,
-                UserId = 2
+                UserId = "2"
             },
                 new Entity.Problem
             {
@@ -99,7 +99,7 @@ namespace HELP.BLL.EntityFrameworkCore
                 Body = Problem.Install_Body,
                 Reward = Problem.Install_Reward,
                 Title = Problem.Install_Title,
-                UserId = 1
+                UserId = "1"
             }
             };
             for (int i = 1; i < 20; i++)
@@ -108,7 +108,7 @@ namespace HELP.BLL.EntityFrameworkCore
                 fakeproblem.Body = "Fakeproblem" + i.ToString();
                 fakeproblem.Title = "FakeTitle" + i.ToString();
                 fakeproblem.SetPrivateFieldInBase("_CreateTime", DateTime.Now.AddDays(-i));
-                fakeproblem.UserId = 1;
+                fakeproblem.UserId = "1";
                 fakeproblem.Reward = i;
                 list.Add(fakeproblem);
             }
@@ -132,14 +132,14 @@ namespace HELP.BLL.EntityFrameworkCore
                 {
                     Body=Comment.PhoneGap_Comment_1_Body,
                     //CreateTime=Comment.PhoneGap_Comment_1_CreateTime,
-                    UserId=1,
+                    UserId="1",
                     ProblemId=1
 
                 },
                 new Entity.Comment
                 {
                     Body=Comment.PhoneGap_Reply_1_Body,
-                    UserId=2,
+                    UserId="2",
                     ProblemId=1
                 }
             };
@@ -228,7 +228,7 @@ namespace HELP.BLL.EntityFrameworkCore
 
         public static Entity.Contact yezicontact = new Entity.Contact
         {
-            UserId = 1,
+            UserId = "1",
             QQ = Contact.yezi_QQ,
             Telephone = Contact.yezi_Telephone,
             WeChat = Contact.yezi_Wechat,
@@ -237,7 +237,7 @@ namespace HELP.BLL.EntityFrameworkCore
 
         public static Entity.Contact DKcontact = new Entity.Contact
         {
-            UserId = 2,
+            UserId = "2",
             QQ = Contact.dk_QQ
         };
 
@@ -257,7 +257,7 @@ namespace HELP.BLL.EntityFrameworkCore
             {
                 Count = count,
                 Description = description,
-                UserId = 3
+                UserId = "3"
             };
             credit.SetPrivateFieldInBase("_CreateTime", create);
 

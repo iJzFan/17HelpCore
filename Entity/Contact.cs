@@ -10,7 +10,7 @@ namespace HELP.BLL.Entity
     {
         [Key]
         [ForeignKey("User")]
-        public int UserId { get; set; }
+        public string UserId { get; set; }
         public string QQ { get; set; }
         public string WeChat { get; set; }
         public string Telephone { get; set; }

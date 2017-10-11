@@ -11,7 +11,7 @@ namespace HELP.BLL.Entity
         public  string Body { get; set; }
 
         [ForeignKey("UserId")]
-        public int UserId { get; set; }
+        public string UserId { get; set; }
 
         [ForeignKey("ProblemId")]
         public int ProblemId { get; set; }

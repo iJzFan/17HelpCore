@@ -3,11 +3,13 @@ using HELP.BLL.EntityFrameworkCore;
 using HELP.GlobalFile.Global;
 using HELP.GlobalFile.Global.Encryption;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -19,12 +21,16 @@ namespace HELP.Service.ProductionService
         protected EFDbContext _context;
         protected IHttpContextAccessor _httpContextAccessor;
         protected IEncrypt _encrypt;
+        protected UserManager<User> _userManager;
+        protected SignInManager<User> _signInManager;
 
-        public BaseService(EFDbContext context, IHttpContextAccessor httpContextAccessor, IEncrypt encrypt)
+        public BaseService(EFDbContext context, IHttpContextAccessor httpContextAccessor, IEncrypt encrypt, UserManager<User> userManager, SignInManager<User> signInManager)
         {
             _context = context;
             _httpContextAccessor = httpContextAccessor;
             _encrypt = encrypt;
+            _userManager = userManager;
+            _signInManager = signInManager;
         }
         #endregion
 
@@ -34,52 +40,74 @@ namespace HELP.Service.ProductionService
         /// <returns>如果用户没有登陆，返回null</returns>
         protected async Task<User> GetCurrentUser()
         {
-            var Context = _httpContextAccessor.HttpContext;
-            string key = CookieName.USER_ID;
-
-            var userIdentity = Context.Request.Cookies[key];
-            if (userIdentity == null)
+            var claims = _httpContextAccessor.HttpContext.User.Claims;
+            if (claims == null)
             {
                 return null;
             }
-
-            try
+            var userId = claims.Where(claim=>claim.Type==ClaimTypes.SerialNumber).FirstOrDefault().Value;
+            var authCode = claims.Where(claim => claim.Type == ClaimTypes.NameIdentifier).FirstOrDefault().Value;
+            var user = await _context.Users.AsNoTracking().SingleOrDefaultAsync(x => x.Id == userId);
+            if (user == null)
             {
-                int userId = Convert.ToInt32(userIdentity);
-                string encryptInfo = Context.Request.Cookies[CookieName.AUTH_CODE];
-                if (string.IsNullOrEmpty(encryptInfo))
-                {
-                    string message = string.Format("cookie for {0}={1} has no encryption.", key, userId);
-                    throw new Exception(message);
-                }
-                var user = await _context.Users.AsNoTracking().SingleOrDefaultAsync(x => x.Id == userId);
-                if (user == null)
-                {
-                    string message = string.Format("cookie for user：{1} has doesn't exist.", userId);
-                    throw new Exception(message);
-                }
-                if (_encrypt.Encrypt(user.AuthCode) != encryptInfo)
-                {
-                    throw new Exception(string.Format("cookie for {0}={1} has wrong encryption.", key, userId));
-                }
-                return user;
+                string message = string.Format($"cookie for user：{userId} has doesn't exist.");
+                throw new Exception(message);
             }
-            catch (Exception e)
+            if (user.AuthCode != authCode)
             {
-                //TODO: workaround for the e.Message throw out exceptions.
-                while (e.InnerException != null) e = e.InnerException;
-
-                //TODO: where? how?
-                //new LogService().Off();
-
-                //TODO: probably need more information later.
-                // var log = log4net.LogManager.GetLogger("KnownError");
-                //log.Error(e.Message);
-
-                return null;
-
+                throw new Exception(string.Format($"cookie for {ClaimTypes.SerialNumber}={userId} has wrong encryption."));
             }
+            return user;
         }
+        //{
+        //    var Context = _httpContextAccessor.HttpContext;
+        //    string key = CookieName.USER_ID;
+
+        //    var userIdentity = Context.Request.Cookies[key];
+        //    if (userIdentity == null)
+        //    {
+        //        return null;
+        //    }
+
+
+
+        //    try
+        //    {
+        //        int userId = Convert.ToInt32(userIdentity);
+        //        string encryptInfo = Context.Request.Cookies[CookieName.AUTH_CODE];
+        //        if (string.IsNullOrEmpty(encryptInfo))
+        //        {
+        //            string message = string.Format("cookie for {0}={1} has no encryption.", key, userId);
+        //            throw new Exception(message);
+        //        }
+        //        var user = await _context.Users.AsNoTracking().SingleOrDefaultAsync(x => x.Id == userId);
+        //        if (user == null)
+        //        {
+        //            string message = string.Format("cookie for user：{1} has doesn't exist.", userId);
+        //            throw new Exception(message);
+        //        }
+        //        if (_encrypt.Encrypt(user.AuthCode) != encryptInfo)
+        //        {
+        //            throw new Exception(string.Format("cookie for {0}={1} has wrong encryption.", key, userId));
+        //        }
+        //        return user;
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        //TODO: workaround for the e.Message throw out exceptions.
+        //        while (e.InnerException != null) e = e.InnerException;
+
+        //        //TODO: where? how?
+        //        //new LogService().Off();
+
+        //        //TODO: probably need more information later.
+        //        // var log = log4net.LogManager.GetLogger("KnownError");
+        //        //log.Error(e.Message);
+
+        //        return null;
+
+        //    }
+        //}
 
         //protected Role getCurrentUserRole()
         //{
@@ -91,11 +119,11 @@ namespace HELP.Service.ProductionService
         //    return (Role)Enum.Parse(typeof(Role), userIdentity.Values[CookieName.ROLE]);
         //}
 
-            /// <summary>
-            /// 设置Cookie
-            /// </summary>
-            /// <param name="user"></param>
-            /// <param name="days"></param>
+        /// <summary>
+        /// 设置Cookie
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="days"></param>
         protected void SetUserCookie(User user, /*Role role,*/ int? days = null)
         {
 

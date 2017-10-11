@@ -17,7 +17,7 @@ namespace HELP.BLL.Entity
         public int Reward { get; set; }
 
         [ForeignKey("UserId")]
-        public int UserId { get; set; }
+        public string UserId { get; set; }
 
         #region Navigation property
         public virtual User Author { get; set; }

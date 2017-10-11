@@ -7,7 +7,7 @@ using System.Security.Principal;
 
 namespace HELP.BLL.Entity
 {
-    public class User: BaseEntity
+    public class User: IdentityUser
     {
 
         private string _authCode;
@@ -16,6 +16,20 @@ namespace HELP.BLL.Entity
             // 只能调用SetAuthCode()赋值
             get { return _authCode; }
         }
+
+        private DateTime _CreateTime;
+        public User()
+        {
+            SetCreateTime();
+        }
+
+        public DateTime CreateTime { get { return _CreateTime; } }
+
+        internal virtual void SetCreateTime()
+        {
+            _CreateTime = DateTime.Now;
+        }
+
 
         public  string Name { get; set; }
         public  string Password { get; set; }

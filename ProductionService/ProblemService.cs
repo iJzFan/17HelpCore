@@ -6,6 +6,7 @@ using HELP.Service.ViewModel.Problem;
 using HELP.Service.ViewModel.Problem.Single;
 using HELP.Service.ViewModel.Shared;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -17,7 +18,7 @@ namespace HELP.Service.ProductionService
     public class ProblemService : BaseService, IProblemService
     {
         #region Construtor
-        public ProblemService(EFDbContext context, IHttpContextAccessor httpContextAccessor, IEncrypt encrypt) : base(context, httpContextAccessor, encrypt)
+        public ProblemService(EFDbContext _context, IHttpContextAccessor _httpContextAccessor, IEncrypt _encrypt, UserManager<User> _userManager, SignInManager<User> _signInManager) : base(_context, _httpContextAccessor, _encrypt, _userManager, _signInManager)
         {
         }
         #endregion
@@ -40,7 +41,7 @@ namespace HELP.Service.ProductionService
             foreach (var problem in problems)
             {
                 var commentcount = await _context.Comments.CountAsync(x => x.ProblemId == problem.Id);
-                var bestkind = await _context.Users.SingleOrDefaultAsync(x => x.Id == problem.RewardBestId);
+                var bestkind = await _context.Users.SingleOrDefaultAsync(x => x.Id == problem.RewardBestId.ToString());
                 var author = new UserModel();
                 author.Id = problem.Author.Id;
                 author.Name = problem.Author.Name;
@@ -106,7 +107,7 @@ namespace HELP.Service.ProductionService
         public async Task<ItemModel> GetItem(int id)
         {
             var problem = await _context.Problems.Include(x=>x.Author).SingleOrDefaultAsync(x => x.Id == id);
-            var bestkind = await _context.Users.SingleOrDefaultAsync(x => x.Id == problem.RewardBestId);
+            var bestkind = await _context.Users.SingleOrDefaultAsync(x => x.Id == problem.RewardBestId.ToString());
             var commentcount = await _context.Comments.CountAsync(x=>x.ProblemId==id);
             var author = new UserModel {Id=problem.Author.Id,Name=problem.Author.Name };
             var bestKindHearted = new UserModel();
@@ -200,7 +201,7 @@ namespace HELP.Service.ProductionService
         {
             var comment = await _context.Comments.Include(x=>x.Problem).Include(x=>x.Author).SingleOrDefaultAsync(x=>x.Id==commentId);
 
-            int currentUserId =(await GetCurrentUser()).Id;
+            var currentUserId =(await GetCurrentUser()).Id;
 
             //不能自己酬谢自己
             if (comment.Author.Id == currentUserId)

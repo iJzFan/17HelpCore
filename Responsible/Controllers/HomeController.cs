@@ -2,10 +2,12 @@
 using HELP.BLL.EntityFrameworkCore;
 using HELP.Service.ServiceInterface;
 using HELP.UI.Responsible.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Diagnostics;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace HELP.UI.Responsible.Controllers
@@ -16,7 +18,6 @@ namespace HELP.UI.Responsible.Controllers
 
         public IActionResult Index()
         {
-
 
             return Redirect("/Problem/Index");
         }
