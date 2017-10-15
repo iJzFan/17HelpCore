@@ -1,4 +1,5 @@
-﻿using HELP.GlobalFile.Global.Helper;
+﻿using HELP.GlobalFile.Global;
+using HELP.GlobalFile.Global.Helper;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
@@ -36,6 +37,7 @@ namespace HELP.BLL.Entity
 
         public virtual Contact contact { get; set; }
 
+        public Role? Role { get; set; }
 
         public int Credit { get; protected internal set; }
 
@@ -57,6 +59,7 @@ namespace HELP.BLL.Entity
 
                 public virtual void Register()
         {
+            
             CreditHistory = new List<Credit>();
             Credit credit = new Credit
             {

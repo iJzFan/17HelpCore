@@ -41,7 +41,7 @@ namespace HELP.Service.ProductionService
         protected async Task<User> GetCurrentUser()
         {
             var claims = _httpContextAccessor.HttpContext.User.Claims;
-            if (claims == null)
+            if (!claims.Any())
             {
                 return null;
             }

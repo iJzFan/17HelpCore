@@ -33,6 +33,7 @@ namespace HELP.Service.ProductionService
             {
                 Name = model.UserName,
                 Password = password,
+                Role = GlobalFile.Global.Role.system,
                 contact = new Contact()
             };
             user.SetAuthCode();

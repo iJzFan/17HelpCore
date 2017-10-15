@@ -24,5 +24,12 @@
 
         public const string FIELD_BALANCE = "_balance";
     }
+
+    public enum Role
+    {
+        system,
+        admin
+    }
+
 }
 

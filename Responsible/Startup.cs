@@ -1,9 +1,12 @@
 ﻿using HELP.BLL.Entity;
 using HELP.BLL.EntityFrameworkCore;
 using HELP.GlobalFile.Global.Encryption;
+using HELP.GlobalFile.Global.Helper;
 using HELP.Service.ProductionService;
 using HELP.Service.ServiceInterface;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -11,9 +14,13 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace HELP.UI.Responsible
@@ -51,8 +58,42 @@ namespace HELP.UI.Responsible
                     );
 
             services.AddIdentity<User, IdentityRole>()
-                .AddEntityFrameworkStores<EFDbContext>();
-            //    .AddDefaultTokenProviders();
+                .AddEntityFrameworkStores<EFDbContext>()
+                .AddDefaultTokenProviders();
+
+            #region JWT
+
+            // Enable the use of an  [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]   attribute on methods and classes to protect.
+            services.AddAuthentication().AddJwtBearer(cfg =>
+            {
+                cfg.RequireHttpsMetadata = false;
+                cfg.SaveToken = true;
+
+                cfg.TokenValidationParameters = new TokenValidationParameters()
+                {
+                    IssuerSigningKey = TokenAuthOption.Key,
+                    ValidAudience = TokenAuthOption.Audience,
+                    ValidIssuer = TokenAuthOption.Issuer,
+                    // When receiving a token, check that we've signed it.
+                    ValidateIssuerSigningKey = true,
+                    // When receiving a token, check that it is still valid.
+                    ValidateLifetime = true,
+                    // This defines the maximum allowable clock skew - i.e. provides a tolerance on the token expiry time 
+                    // when validating the lifetime. As we're creating the tokens locally and validating them on the same 
+                    // machines which should have synchronised time, this can be set to zero. and default value will be 5minutes
+                    ClockSkew = TimeSpan.FromMinutes(0)
+                };
+
+            });
+            services.AddAuthorization(auth =>
+            {
+                auth.AddPolicy("Bearer", new AuthorizationPolicyBuilder()
+                    .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme‌​)
+                    .RequireAuthenticatedUser().Build());
+            });
+
+            #endregion
+
 
             services.ConfigureApplicationCookie(options =>
             {
@@ -76,7 +117,9 @@ namespace HELP.UI.Responsible
                 options.IdleTimeout = TimeSpan.FromSeconds(10);
                 options.Cookie.HttpOnly = true;
             });
+            #region
 
+            #endregion
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<ILogService, LogService>();
             services.AddTransient<IProblemService, ProblemService>();
@@ -134,13 +177,13 @@ namespace HELP.UI.Responsible
             {
                 var context = scope.ServiceProvider
                 .GetRequiredService<EFDbContext>();
-               await context.Database.EnsureCreatedAsync();
+                await context.Database.EnsureCreatedAsync();
                 if (!await context.Users.AnyAsync())
                 {
                     var init = new InitData(context);
                     await init.Initialize();
                 }
-                    
+
             }
 
         }
