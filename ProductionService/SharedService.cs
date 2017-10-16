@@ -31,7 +31,7 @@ namespace HELP.Service.ProductionService
 
             if (user != null)
             {
-                return new NavigatorModel { UserName = user.Name, Credit = user.Credit };
+                return new NavigatorModel { UserName = user.Name, Credit = user.Creditpoints };
             }
 
             return new NavigatorModel { UserName = null };

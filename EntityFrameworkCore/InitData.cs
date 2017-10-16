@@ -59,6 +59,8 @@ namespace HELP.BLL.EntityFrameworkCore
         /// </summary>
         public async Task AddProblems()
         {
+            var yezi = await _context.Users.Where(x => x.Name == "yezi").FirstOrDefaultAsync();
+            var DK = await _context.Users.Where(x => x.Name == "DK").FirstOrDefaultAsync();
             var list = new List<Entity.Problem>()
             {
                 new Entity.Problem
@@ -67,7 +69,7 @@ namespace HELP.BLL.EntityFrameworkCore
                 Body = Problem.PhoneGap_Body,
                 Reward = Problem.PhoneGap_Reward,
                 Title = Problem.PhoneGap_Title,
-                UserId = "2"
+                UserId = yezi.Id,
             },
                 new Entity.Problem
             {
@@ -75,7 +77,7 @@ namespace HELP.BLL.EntityFrameworkCore
                 Body = Problem.SSCE_Body,
                 Reward = Problem.SSCE_Reward,
                 Title = Problem.SSCE_Title,
-                UserId = "2"
+                UserId = yezi.Id
             },
                 new Entity.Problem
             {
@@ -83,7 +85,7 @@ namespace HELP.BLL.EntityFrameworkCore
                 Body = Problem.WebGrease_Body,
                 Reward = Problem.WebGrease_Reward,
                 Title = Problem.WebGrease_Title,
-                UserId = "2"
+                UserId = DK.Id
             },
                 new Entity.Problem
             {
@@ -91,7 +93,7 @@ namespace HELP.BLL.EntityFrameworkCore
                 Body = Problem.WeChat_Body,
                 Reward = Problem.WeChat_Reward,
                 Title = Problem.WeChat_Title,
-                UserId = "2"
+                UserId = yezi.Id
             },
                 new Entity.Problem
             {
@@ -99,7 +101,7 @@ namespace HELP.BLL.EntityFrameworkCore
                 Body = Problem.Install_Body,
                 Reward = Problem.Install_Reward,
                 Title = Problem.Install_Title,
-                UserId = "1"
+                UserId = DK.Id
             }
             };
             for (int i = 1; i < 20; i++)
@@ -108,7 +110,7 @@ namespace HELP.BLL.EntityFrameworkCore
                 fakeproblem.Body = "Fakeproblem" + i.ToString();
                 fakeproblem.Title = "FakeTitle" + i.ToString();
                 fakeproblem.SetPrivateFieldInBase("_CreateTime", DateTime.Now.AddDays(-i));
-                fakeproblem.UserId = "1";
+                fakeproblem.UserId = yezi.Id;
                 fakeproblem.Reward = i;
                 list.Add(fakeproblem);
             }
@@ -126,20 +128,22 @@ namespace HELP.BLL.EntityFrameworkCore
         /// </summary>
         public async Task AddComments()
         {
+            var yezi = await _context.Users.Where(x => x.Name == "yezi").FirstOrDefaultAsync();
+            var DK = await _context.Users.Where(x => x.Name == "DK").FirstOrDefaultAsync();
             var list = new List<Entity.Comment>
             {
                 new Entity.Comment
                 {
                     Body=Comment.PhoneGap_Comment_1_Body,
                     //CreateTime=Comment.PhoneGap_Comment_1_CreateTime,
-                    UserId="1",
+                    UserId=yezi.Id,
                     ProblemId=1
 
                 },
                 new Entity.Comment
                 {
                     Body=Comment.PhoneGap_Reply_1_Body,
-                    UserId="2",
+                    UserId=DK.Id,
                     ProblemId=1
                 }
             };
@@ -161,52 +165,52 @@ namespace HELP.BLL.EntityFrameworkCore
             InitUsers.TCreditIndex.Register();
             await _context.Credit.AddAsync(InitCredit.SaveCredit(InitUsers.yezi.CreditHistory.FirstOrDefault().Count,
                 InitUsers.yezi.CreditHistory.FirstOrDefault().Description,
-                InitUsers.yezi.CreditHistory.FirstOrDefault().CreateTime));
+                InitUsers.yezi.CreditHistory.FirstOrDefault().CreateTime,_context));
             await _context.Credit.AddAsync(InitCredit.SaveCredit(InitUsers.DK.CreditHistory.FirstOrDefault().Count,
                 InitUsers.DK.CreditHistory.FirstOrDefault().Description,
-                InitUsers.DK.CreditHistory.FirstOrDefault().CreateTime));
+                InitUsers.DK.CreditHistory.FirstOrDefault().CreateTime,_context));
             await _context.Credit.AddAsync(InitCredit.SaveCredit(InitUsers.TCreditIndex.CreditHistory.FirstOrDefault().Count,
                 InitUsers.TCreditIndex.CreditHistory.FirstOrDefault().Description,
-                InitUsers.TCreditIndex.CreditHistory.FirstOrDefault().CreateTime));
+                InitUsers.TCreditIndex.CreditHistory.FirstOrDefault().CreateTime,_context));
             await _context.Credit.AddAsync(InitCredit.SaveCredit(Credit.TCreditIndex_Count_1,
                 Credit.TCreditIndex_Description_1,
-                Credit.TCreditIndex_CreateTime_1));
+                Credit.TCreditIndex_CreateTime_1, _context));
             await _context.Credit.AddAsync(InitCredit.SaveCredit(Credit.TCreditIndex_Count_2,
                 Credit.TCreditIndex_Description_2,
-                Credit.TCreditIndex_CreateTime_2));
+                Credit.TCreditIndex_CreateTime_2, _context));
             await _context.Credit.AddAsync(InitCredit.SaveCredit(Credit.TCreditIndex_Count_3,
                 Credit.TCreditIndex_Description_3,
-                Credit.TCreditIndex_CreateTime_3));
+                Credit.TCreditIndex_CreateTime_3, _context));
             await _context.Credit.AddAsync(InitCredit.SaveCredit(Credit.TCreditIndex_Count_4,
                 Credit.TCreditIndex_Description_4,
-                Credit.TCreditIndex_CreateTime_4));
+                Credit.TCreditIndex_CreateTime_4, _context));
             await _context.Credit.AddAsync(InitCredit.SaveCredit(Credit.TCreditIndex_Count_5,
                 Credit.TCreditIndex_Description_5,
-                Credit.TCreditIndex_CreateTime_5));
+                Credit.TCreditIndex_CreateTime_5, _context));
             await _context.Credit.AddAsync(InitCredit.SaveCredit(Credit.TCreditIndex_Count_6,
                 Credit.TCreditIndex_Description_6,
-                Credit.TCreditIndex_CreateTime_6));
+                Credit.TCreditIndex_CreateTime_6, _context));
             await _context.Credit.AddAsync(InitCredit.SaveCredit(Credit.TCreditIndex_Count_7,
                 Credit.TCreditIndex_Description_7,
-                Credit.TCreditIndex_CreateTime_7));
+                Credit.TCreditIndex_CreateTime_7, _context));
             await _context.Credit.AddAsync(InitCredit.SaveCredit(Credit.TCreditIndex_Count_8,
                 Credit.TCreditIndex_Description_8,
-                Credit.TCreditIndex_CreateTime_8));
+                Credit.TCreditIndex_CreateTime_8, _context));
             await _context.Credit.AddAsync(InitCredit.SaveCredit(Credit.TCreditIndex_Count_9,
                 Credit.TCreditIndex_Description_9,
-                Credit.TCreditIndex_CreateTime_9));
+                Credit.TCreditIndex_CreateTime_9, _context));
             await _context.Credit.AddAsync(InitCredit.SaveCredit(Credit.TCreditIndex_Count_10,
                 Credit.TCreditIndex_Description_10,
-                Credit.TCreditIndex_CreateTime_10));
+                Credit.TCreditIndex_CreateTime_10, _context));
             await _context.Credit.AddAsync(InitCredit.SaveCredit(Credit.TCreditIndex_Count_11,
                 Credit.TCreditIndex_Description_11,
-                Credit.TCreditIndex_CreateTime_11));
+                Credit.TCreditIndex_CreateTime_11, _context));
             await _context.Credit.AddAsync(InitCredit.SaveCredit(Credit.TCreditIndex_Count_12,
                 Credit.TCreditIndex_Description_12,
-                Credit.TCreditIndex_CreateTime_12));
+                Credit.TCreditIndex_CreateTime_12, _context));
             await _context.Credit.AddAsync(InitCredit.SaveCredit(Credit.TCreditIndex_Count_13,
                 Credit.TCreditIndex_Description_13,
-                Credit.TCreditIndex_CreateTime_13));
+                Credit.TCreditIndex_CreateTime_13, _context));
             _context.SaveChanges();
         }
     }
@@ -215,9 +219,13 @@ namespace HELP.BLL.EntityFrameworkCore
 
     public class InitUsers
     {
+
+
         internal static string password = "2491d59c3432b1a10deb43f1907b9d4e9625081d0187532bcce7820a6be830074d24270844772fb330f44fb2039a806f3683c80b68de41c35eb3a7bf64bdaaad";
+
         public static Entity.User Register(string name)
         {
+
             var user = new Entity.User();
             user.Name = name;
             user.Password = password;
@@ -228,7 +236,7 @@ namespace HELP.BLL.EntityFrameworkCore
 
         public static Entity.Contact yezicontact = new Entity.Contact
         {
-            UserId = "1",
+            
             QQ = Contact.yezi_QQ,
             Telephone = Contact.yezi_Telephone,
             WeChat = Contact.yezi_Wechat,
@@ -237,7 +245,7 @@ namespace HELP.BLL.EntityFrameworkCore
 
         public static Entity.Contact DKcontact = new Entity.Contact
         {
-            UserId = "2",
+            
             QQ = Contact.dk_QQ
         };
 
@@ -251,13 +259,14 @@ namespace HELP.BLL.EntityFrameworkCore
 
     public class InitCredit
     {
-        public static Entity.Credit SaveCredit(int count, string description, DateTime create)
+        public static Entity.Credit SaveCredit(int count, string description, DateTime create,EFDbContext _context)
         {
+            var index = _context.Users.Where(x => x.Name == "TCreditIndex").FirstOrDefault();
             var credit = new Entity.Credit
             {
                 Count = count,
                 Description = description,
-                UserId = "3"
+                UserId = index.Id
             };
             credit.SetPrivateFieldInBase("_CreateTime", create);
 

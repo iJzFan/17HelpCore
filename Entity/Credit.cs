@@ -30,16 +30,16 @@ namespace HELP.BLL.Entity
 
         public virtual void SetBalance()
         {
-            _balance = User.Credit + Count;
+            _balance = User.Creditpoints + Count;
 
             if (_balance < 0)
             {
                 throw new Exception(
                     string.Format("用户id={0}的现有时间币{1}，消耗时间币{2}，结算时间币小于0，Description为：{3}",
-                    User.Id, User.Credit, Count, Description));
+                    User.Id, User.Creditpoints, Count, Description));
             }
 
-            User.Credit = _balance;
+            User.Creditpoints = _balance;
         }
     }
 }

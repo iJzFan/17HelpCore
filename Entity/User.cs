@@ -39,7 +39,7 @@ namespace HELP.BLL.Entity
 
         public Role? Role { get; set; }
 
-        public int Credit { get; protected internal set; }
+        public int Creditpoints { get; protected internal set; }
 
         public virtual IList<Credit> CreditHistory { get; set; }
 
