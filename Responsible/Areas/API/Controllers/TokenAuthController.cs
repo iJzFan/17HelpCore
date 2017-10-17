@@ -105,7 +105,7 @@ namespace HELP.UI.Responsible.Areas.API.Controllers
 /// Need jwt token to access
 /// </summary>
 /// <returns></returns>
-        [Authorize(JwtBearerDefaults.AuthenticationScheme)]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpGet]
         public async Task<IActionResult> Get()
         {

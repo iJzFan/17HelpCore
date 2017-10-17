@@ -4,6 +4,7 @@ using HELP.GlobalFile.Global.Encryption;
 using HELP.GlobalFile.Global.Helper;
 using HELP.Service.ProductionService;
 using HELP.Service.ServiceInterface;
+using HELP.UI.Responsible.Filters;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -107,9 +108,7 @@ namespace HELP.UI.Responsible
                     Version = "v1",
                     Title = "OPEN API"
                 });
-                var basePath = PlatformServices.Default.Application.ApplicationBasePath;
-                var xmlPath = Path.Combine(basePath, "CoreApi.xml");
-                c.IncludeXmlComments(xmlPath);
+                c.OperationFilter<SwaggerFilter>();
             }
                );
             #endregion
