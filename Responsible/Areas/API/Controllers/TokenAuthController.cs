@@ -43,7 +43,11 @@ namespace HELP.UI.Responsible.Areas.API.Controllers
         }
 
         #endregion
-
+/// <summary>
+/// Request UserName and Password
+/// </summary>
+/// <param name="model"></param>
+/// <returns></returns>
         [HttpPut]
         public async Task<IActionResult> Put(OnModel model)
         {
@@ -97,16 +101,21 @@ namespace HELP.UI.Responsible.Areas.API.Controllers
             });
             return handler.WriteToken(securityToken);
         }
-
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+/// <summary>
+/// Need jwt token to access
+/// </summary>
+/// <returns></returns>
+        [Authorize(JwtBearerDefaults.AuthenticationScheme)]
         [HttpGet]
-        public IActionResult Get()
+        public async Task<IActionResult> Get()
         {
             var claimsIdentity = User.Identity as ClaimsIdentity;
+
+            var user = await _context.Users.FirstOrDefaultAsync(x => x.Name == claimsIdentity.Name);
             return Json(new RequestResult
             {
                 State = RequestState.Success,
-                Data = new { UserName = claimsIdentity.Name }
+                Data = new { UserName = claimsIdentity.Name, Credit = user.Creditpoints }
             });
         }
     }
