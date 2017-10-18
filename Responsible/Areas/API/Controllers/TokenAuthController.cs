@@ -19,7 +19,7 @@ using HELP.BLL.Entity;
 
 namespace HELP.UI.Responsible.Areas.API.Controllers
 {
-
+    [Produces("application/json")]
     [Route("api/[controller]")]
     public class TokenAuthController : Controller
     {
