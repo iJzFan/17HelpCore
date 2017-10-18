@@ -1,0 +1,30 @@
+﻿@model HELP.Service.ViewModel.Shared.ImageCodeModel
+@using HELP.Service.ViewModel.Shared
+
+@{ string errorMessage = null;
+    if (Model != null)
+    {
+        if (Model.ImageCodeError == ImageCodeError.Expired) { errorMessage = "* 验证码已过期，请重新输入"; }
+        if (Model.ImageCodeError == ImageCodeError.Wrong) { errorMessage = "* 验证码错误，请重新输入"; }
+
+    }
+}
+<span id="errorMessage" class="text-danger">@errorMessage</span>
+<br />
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#freshImgCode").click(function (event) {
+            event.preventDefault();
+            $('#validateCode')[0].src = '/Shared/GetImageCode?NumKey=' + Math.random();
+            $("#ImageCode_InputImageCode)").val("").focus();
+        });
+        $("#ImageCode_InputImageCode").focus(function (event) {
+            $('#validateCode').show();
+            $("#freshImgCode").show();
+            $("#imgCodeReminder").hide();
+            $("#errorMessage").hide();
+            $('#validateCode')[0].src = '/Shared/GetImageCode?NumKey=' + Math.random();
+        });
+    })
+</script>

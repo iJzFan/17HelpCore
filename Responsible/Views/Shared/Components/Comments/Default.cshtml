@@ -1,0 +1,9 @@
+﻿@model HELP.Service.ViewModel.Problem.Single.CommentsModel
+@if (Model != null)
+{
+    foreach (var item in Model.List)
+    {
+        @Html.Partial("Comment/_Item", item)
+    }
+
+}

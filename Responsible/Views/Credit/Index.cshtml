@@ -1,0 +1,30 @@
+﻿@model HELP.Service.ViewModel.Credit.IndexModel
+@{
+    ViewBag.Title = "积分明细";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2 class="page-header"><span class="glyphicon glyphicon-credit-card descend-4px"></span> @ViewBag.Title</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>时间</th>
+            <th>数量</th>
+            <th>剩余</th>
+            <th>备注</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Items)
+        {
+            <tr>
+                <td>@item.CreateTime</td>
+                <td>@item.Count</td>
+                <td>@item.Balance</td>
+                <td>@Html.Raw(item.Description)</td>
+            </tr>
+        }
+    </tbody>
+</table>
+

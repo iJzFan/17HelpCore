@@ -1,0 +1,39 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="container dualcolumns-container">
+    <div class="page-header">
+        <h2>
+            @RenderSection("PageHeader", required: false)
+        </h2>
+    </div>
+    <div class="row">
+        <div class="col-lg-4 col-md-5">
+            <div class="container" style="margin-bottom: 16px;">
+                <div class="row">
+                    <a class="show_introduction visible-sm visible-xs pull-right">
+                        <span class="glyphicon glyphicon-question-sign"></span><span style="margin-left:4px;">说明</span>
+                    </a>
+                </div>
+            </div>
+            @RenderBody()
+            @Html.Partial("_PageIntroductionContainer")
+        </div>
+        <div class="col-lg-5 col-lg-offset-1 col-md-5 col-md-offset-1 visible-lg visible-md">
+            <div id="page_introduction">
+                <h3 class="text-info" style="margin-bottom: 20px;"><span class="glyphicon glyphicon-question-sign descend-4px"></span> 说明</h3>
+                <ol id="page_introduction_body">
+                    <li>可以通过该网站<span class="text-primary text-bold">发布问题</span>和<span class="text-primary text-bold">回复问题</span>。</li>
+                    <li>该网站仅供测试使用，请勿发布不良信息。</li>
+                    @RenderSection("RightPanel", false)
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts{
+    @RenderSection("scripts", false)
+}
+@section style{
+    @RenderSection("style", false)
+}

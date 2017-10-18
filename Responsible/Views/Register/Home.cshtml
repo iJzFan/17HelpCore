@@ -1,0 +1,83 @@
+﻿@{
+    ViewBag.Title = "注册";
+    Layout = "~/Views/Shared/_LayoutDualColumns.cshtml";
+}
+
+@model HELP.Service.ViewModel.Register.HomeModel
+@section PageHeader{
+    <span class="glyphicon glyphicon-registration-mark descend-4px" aria-hidden="true"></span> @ViewBag.Title
+}
+<form asp-route-returnurl="@TempData["ReturnUrl"]" method="post">
+    <div class="form-group">
+        <label>用户名：（* 必填）</label>
+        <div class="input-group">
+            <input asp-for="UserName" class = "form-control", placeholder = "不是昵称，是登录用户名" />
+            <a class="input-group-addon" id="checkUserName"><span class="glyphicon glyphicon-search"></span> 检查</a>
+        </div>
+        <span asp-validation-for="UserName" class="text-danger"/>
+    </div>
+    <div class="form-group">
+        <label>密码：（* 必填）</label>
+        <input asp-for="Password" type="password" class = "form-control", placeholder = "不少于4个字符"/>
+        <span asp-validation-for="Password" class="text-danger" />
+    </div>
+    <div class="form-group">
+        <label>验证密码：（* 必填）</label>
+        <input asp-for="ConfirmPassword" type="password" class="form-control" , placeholder="和密码相同" />
+        <span asp-validation-for="ConfirmPassword" class="text-danger" />
+    </div>
+    <div class="form-group">
+        <label>验证码：（* 必填）</label>
+        <br />
+        @Html.TextBoxFor(x => x.ImageCode.InputImageCode, new { @class = "form-control", style = "width:80px; display: inline;" })
+        <img id="validateCode" style="vertical-align: middle; display: none;" />
+        <a name="imageCode" /><a href="#" id="freshImgCode" style="font-size: 12px; display: none">
+            看不清楚
+        </a> <span id="imgCodeReminder" class="reminder">点击输入框显示</span>
+        <br/> <span asp-validation-for="ImageCode.InputImageCode" class="text-danger" />
+
+        @Html.Partial("_ImageCode", Model.ImageCode)
+    </div>
+    <div class="submit">
+        <input type="submit" class="btn btn-primary loading" value="提交" />
+        <input type="reset" class="btn btn-default" />
+    </div>
+</form>
+
+@section RightPanel{
+
+}
+
+@section scripts{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#checkUserName").click(function (event) {
+                event.preventDefault();
+                var name = $("#UserName").val();
+                if (name == "") {
+                    alert("您还没有输入用户名。");
+                } else {
+                    $.ajax({
+                        url: "/Register/UserNameIsExist",
+                        type: "POST",
+                        data: { 'name': name },
+                        beforeSend: function () { $("#checkUserName").hide(); },
+                        success: function (data) {
+                            if (!data) {
+                                alert("恭喜！该用户名还未被使用。");
+                            }
+                            else {
+                                alert("很抱歉，该用户名已经被使用。换一个吧。");
+                            }
+                        },
+                        complete: function () {
+                            $("#checkUserName").show();
+                        }
+                    });
+                }
+            });
+        })
+    </script>
+}
+
+

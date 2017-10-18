@@ -1,0 +1,131 @@
+﻿@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor _httpContextAccessor
+@model HELP.Service.ViewModel.Problem.SingleModel
+@{
+    ViewBag.Title = "求助单页";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@{
+    string withReturnUrl = "?ReturnUrl=" + _httpContextAccessor.HttpContext.Request.Path;
+    int id = Convert.ToInt32(Html.ViewContext.RouteData.Values["id"]);
+}
+<h2 class="page-header">
+    <span class="glyphicon glyphicon-question-sign descend-4px" aria-hidden="true"></span> @ViewBag.Title
+    @if (!(Model.Item.HasReward??false))
+    {
+        <a href="/Problem/Cancel?problemId=@id" class="btn btn-default hide" style="margin-left:20px;" zyf-problem-cancel>
+            撤销 <span class="glyphicon glyphicon-remove"></span>
+        </a>
+    }
+</h2>
+<div>
+    @await Component.InvokeAsync("SingleProblem", id)
+</div>
+<div style="clear:both;"></div>
+
+<br /><br /><hr />
+
+@await Component.InvokeAsync("Comments", id)
+@if (String.IsNullOrEmpty(_httpContextAccessor.HttpContext.User.Identity.Name))
+{
+    <div style="border:2px dashed #eee; border-radius:4px 6px; padding: 10px 20px;">
+        <span class="glyphicon glyphicon-warning-sign" style="color:yellowgreen;"></span>
+        您还没有登录，不能发布评论。请<a href="/Register/Home@(withReturnUrl)">注册</a>或<a href="/Log/On@(withReturnUrl)">登录</a>。
+    </div>
+}
+else
+{
+    <div>
+        <form asp-route-returnurl="@ViewData["ReturnUrl"]" method="post">
+            <div class="form-group">
+                <label>发表回复</label>
+                <textarea asp-for="Body" class="form-control" , placeholder="不少于15字"></textarea>
+                <span asp-validation-for="Body" class="text-danger" />
+            </div>
+            <div class="submit">
+                <input type="submit" class="btn btn-primary loading" value="回复" />
+            </div>
+        </form>
+
+    </div>
+}
+
+<div id="published_comment"></div>
+
+<script>
+    $(document).ready(function () {
+
+        var problemUserId = @Model.Item.Author.Id;
+    if (isCurrent(problemUserId)) {
+        $("[zyf-problem-cancel]").removeClass("hide");
+    }
+    $("[zyf-problem-cancel]").click(function (event) {
+        event.preventDefault();
+        var $trigger = $(this);
+        $trigger.hide();
+        var url = $(this).attr("href");
+        $.ajax({
+            url: url,
+            success: function (data) {
+                showRemind("成功");
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                JqueryAjaxError(jqXHR, textStatus, errorThrown);
+                $trigger.show();
+            }
+        })
+    })
+
+    //求助人Id
+    var seeker = $("[zyf-show-contact]").attr("zyf-show-contact");
+    //如果当前用户是求助人，且问题仍然在等待帮助
+    if (isCurrent(seeker) && $("[zyf-wait-help]").length > 0) {
+        //每一个“酬谢”按钮
+        $("[zyf-reward]").each(function () {
+            //留言作者的Id
+            var authorId = $(this).attr("zyf-reward");
+            //如果留言作者不是求助人
+            if (authorId != seeker) {
+                $(this).removeClass("hide");
+            }
+            $(this).click(function () {
+                var commentId = $(this).attr("zyf-comment-id");
+                $.ajax({
+                    url: "/Problem/Reward?commentId=" + commentId,
+                    cache: false,
+                    beforeSend: function () {
+                        $("[zyf-reward]").hide();
+                    },
+                    success: function (data) {
+                        showRemind('<p>' +
+                            '<span class="glyphicon glyphicon-ok text-success" style="margin-right:10px;"></span>' +
+                            '<span>感谢您的参与，酬谢已完成。时间币 <span class="glyphicon glyphicon-time" style="color:gold"></span>' + data + '分钟 已转入该用户账户。</span>' +
+                            '</p>');
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        $("[zyf-reward]").show();
+                        JqueryAjaxError(jqXHR, textStatus, errorThrown);
+                    }
+                });
+            })
+        });
+    }
+})
+</script>
+
+<script>
+    function hideButton() {
+        $("#submit").hide();
+    }
+    function showButton() {
+        $("#submit").show();
+    }
+    //function showAjaxError(jqXHR, textStatus, errorThrown) {
+    //    alert("出现了Ajax提交错误，请稍后重试或联系管理员");
+    //}
+    //function congratulate() {
+    //    alert("恭喜！评论发布成功。")
+    //}
+</script>
+

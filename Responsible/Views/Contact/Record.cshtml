@@ -1,0 +1,39 @@
+﻿@{
+    ViewBag.Title = "联系方式录入";
+    Layout = "~/Views/Shared/_LayoutDualColumns.cshtml";
+}
+@model HELP.Service.ViewModel.Contact.RecordModel
+@section PageHeader{
+    <span class="glyphicon glyphicon-phone-alt descend-4px" aria-hidden="true"></span> @ViewBag.Title
+}
+<form asp-route-returnurl="@ViewData["ReturnUrl"]" method="post">
+    <div class="form-group">
+        <label>QQ：</label>
+        <input asp-for="QQ" class="form-control" , placeholder="建议填写" />
+        <span asp-validation-for="QQ" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label>微信：</label>
+        <input asp-for="WeChat" class="form-control" , placeholder="建议填写" />
+    </div>
+    <div class="form-group">
+        <label>电话：</label>
+        <br />
+        <input asp-for="Telephone" class="form-control" , placeholder="请谨慎考虑是否填写" />
+    </div>
+    <div class="form-group">
+        <label>其他</label>
+        <input asp-for="Other" class=" form-control" , placeholder="不超过255字" />
+        <span asp-validation-for="Other" class=" text-danger"></span>
+    </div>
+    <div class="submit">
+        <input type="submit" class="btn btn-primary loading" value="提交" />
+    </div>
+</form>
+
+@section RightPanel{
+
+}
+
+
+

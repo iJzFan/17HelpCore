@@ -1,0 +1,18 @@
+﻿@model HELP.Service.ViewModel.Problem.IndexModel
+@using Microsoft.AspNetCore.Hosting
+@inject IHostingEnvironment env
+@{
+    ViewBag.Title = "求助列表";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<h2 class="page-header"><span class="glyphicon glyphicon-list-alt descend-4px"></span> @ViewBag.Title</h2>
+@foreach (var item in Model.Items)
+{
+    <div style="margin:10px 0; clear:both;">
+
+        @Html.Partial("~/Views/Shared/Components/SingleProblem/Default.cshtml", item)
+    </div>
+}
+
+@Html.Partial("_Paging")
+

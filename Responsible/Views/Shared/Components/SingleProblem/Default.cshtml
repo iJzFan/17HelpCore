@@ -1,0 +1,77 @@
+﻿@model HELP.Service.ViewModel.Problem.Single.ItemModel
+@using Microsoft.AspNetCore.Hosting
+@using HELP.GlobalFile.Global.Helper
+@inject IHostingEnvironment env
+
+<small>@Model.CreateTime.ToString("yyyy:MM:dd HH:mm:ss")</small>
+@*<div class="h3">
+    <a href="/Problem/@Model.Id" target="_blank">@Model.Title</a>
+</div>
+<p style="margin-top:10px;">
+    @*TODO:*@
+    @*@Model.Body
+    </p>
+    @if (!string.IsNullOrEmpty(Model.Attachment))
+    {
+        <p>
+            <span class="glyphicon glyphicon-link"></span> <a href="~/@Model.Attachment" target="_blank">@System.IO.Path.GetFileName(Model.Attachment)</a>
+        </p>
+    }
+    <div class="pull-right">
+        <span><label><a href="/FAQ/Credit" target="_blank">悬赏：</a></label><span>@Model.Reward</span></span>
+        <span><label>求助：</label><a href="/User/Profile/@Model.Author.Id">@Model.Author.Name</a></span>
+    </div>*@
+<div class="h3">
+    @if (Model.HasReward??false)
+    {
+        <span class="glyphicon glyphicon-ok-circle"></span>
+    }
+    else
+    {
+        <span class="glyphicon glyphicon-hourglass descend-4px" zyf-wait-help></span>
+    }
+    <a href="/Problem/@Model.Id" target="_blank">@Model.Title</a>
+</div>
+<p style="margin-top:10px;">
+    @Html.Raw(Model.Body.ParseEnter())
+</p>
+@if (!string.IsNullOrEmpty(Model.Attachment))
+{
+    <p>
+        <span class="glyphicon glyphicon-link"></span> <a href="~/@Model.Attachment" target="_blank">@System.IO.Path.GetFileName(Model.Attachment)</a>
+    </p>
+}
+<div class="status">
+    <span>
+        <label>
+            <span class="glyphicon glyphicon-time credit"></span>
+            <span class="visible-sm-inline visible-md-inline visible-lg-inline">悬赏：</span>
+        </label>
+        <a href="" target="_blank">@Model.Reward</a>
+    </span>
+    @if (!@String.IsNullOrEmpty(Model.BestKindHearted.Name))
+    {
+        <span>
+            <label>
+                <span class="glyphicon glyphicon-gift"></span>
+                <span class="visible-sm-inline visible-md-inline visible-lg-inline">给了：</span>
+            </label>
+            @Html.Partial("_User", Model.BestKindHearted)
+        </span>
+    }
+    <span>
+        <label>
+            <span class="glyphicon glyphicon-user"></span>
+            <span class="visible-sm-inline visible-md-inline visible-lg-inline">求助：</span>
+        </label>
+        @Html.Partial("_User", Model.Author)
+    </span>
+    <span>
+        <label>
+            <span class="glyphicon glyphicon-comment"></span>
+            <span class="visible-sm-inline visible-md-inline visible-lg-inline">评论：</span>
+        </label>
+        <a href="/Problem/@Model.Id#comments" target="_blank" zyf-comment-count>@Model.CommentCount</a>
+    </span>
+</div>
+
