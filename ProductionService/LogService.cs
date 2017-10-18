@@ -75,7 +75,7 @@ namespace HELP.Service.ProductionService
            // {
             //    _httpContextAccessor.HttpContext.Response.Cookies.Delete(CookieName.USER_ID);
             //};
-            await _httpContextAccessor.HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            await _httpContextAccessor.HttpContext.SignOutAsync(IdentityConstants.ApplicationScheme);
         }
     }
 }

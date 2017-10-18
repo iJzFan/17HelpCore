@@ -13,7 +13,7 @@ namespace HELP.Service.ViewModel.Problem.Single
         public string Body { get; set; }
         public int CommentCount { get; set; }
         public int Reward { get; set; }
-        public bool HasReward { get; set; }
+        public bool? HasReward { get; set; }
         public string Attachment { get; set; }
         public UserModel Author { get; set; }
         public UserModel BestKindHearted { get; set; }

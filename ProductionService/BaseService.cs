@@ -2,6 +2,7 @@
 using HELP.BLL.EntityFrameworkCore;
 using HELP.GlobalFile.Global;
 using HELP.GlobalFile.Global.Encryption;
+using HELP.Service.ServiceInterface;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -15,7 +16,7 @@ using System.Threading.Tasks;
 
 namespace HELP.Service.ProductionService
 {
-    public class BaseService
+    public class BaseService: IBaseService
     {
         #region Constructor
         protected EFDbContext _context;
@@ -38,7 +39,7 @@ namespace HELP.Service.ProductionService
         /// 获取当前用户
         /// </summary>
         /// <returns>如果用户没有登陆，返回null</returns>
-        protected async Task<User> GetCurrentUser()
+        public async Task<User> GetCurrentUser()
         {
             var claims = _httpContextAccessor.HttpContext.User.Claims;
             if (!claims.Any())
@@ -124,19 +125,19 @@ namespace HELP.Service.ProductionService
         /// </summary>
         /// <param name="user"></param>
         /// <param name="days"></param>
-        protected void SetUserCookie(User user, /*Role role,*/ int? days = null)
-        {
+        //protected void SetUserCookie(User user, /*Role role,*/ int? days = null)
+        //{
 
-            var opt = new CookieOptions();
+        //    var opt = new CookieOptions();
 
-            if (days.HasValue)
-            {
-                opt.Expires = DateTime.Now.AddDays(days.Value);
-            }
+        //    if (days.HasValue)
+        //    {
+        //        opt.Expires = DateTime.Now.AddDays(days.Value);
+        //    }
 
-            _httpContextAccessor.HttpContext.Response.Cookies.Append(CookieName.USER_ID, user.Id.ToString(), opt);
-            _httpContextAccessor.HttpContext.Response.Cookies.Append(CookieName.AUTH_CODE, _encrypt.Encrypt(user.AuthCode), opt);
+        //    _httpContextAccessor.HttpContext.Response.Cookies.Append(CookieName.USER_ID, user.Id.ToString(), opt);
+        //    _httpContextAccessor.HttpContext.Response.Cookies.Append(CookieName.AUTH_CODE, _encrypt.Encrypt(user.AuthCode), opt);
 
-        }
+        //}
     }
 }

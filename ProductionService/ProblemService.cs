@@ -92,6 +92,7 @@ namespace HELP.Service.ProductionService
                 item.Author = new UserModel { Id = comment.Author.Id, Name = comment.Author.Name };
                 item.Body = comment.Body;
                 item.CreateTime = comment.CreateTime;
+                item.Floor = comment.Floor;
                 list.Add(item);
             }
 
@@ -173,12 +174,14 @@ namespace HELP.Service.ProductionService
         public async Task<ViewModel.Shared.Comment.ItemModel> SaveComment(SingleModel model, int problemId)
         {
             var author = await GetCurrentUser();
+            var commentCount = await _context.Comments.Where(x => x.ProblemId == problemId).CountAsync();
             var comment = new Comment
             {
                 Body=model.Body,
                 //CreateTime=DateTime.Now,
                 ProblemId=problemId,
-                UserId=author.Id
+                UserId=author.Id,
+                Floor=commentCount+1
             };
             await _context.Comments.AddAsync(comment);
             await _context.SaveChangesAsync();
@@ -187,7 +190,8 @@ namespace HELP.Service.ProductionService
             {
                 Body = comment.Body,
                 Author=new UserModel { Id=author.Id,Name=author.Name},
-                CreateTime = comment.CreateTime
+                CreateTime = comment.CreateTime,
+                Floor=comment.Floor
             };
 
         }

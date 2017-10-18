@@ -16,6 +16,8 @@ namespace HELP.BLL.Entity
         [ForeignKey("ProblemId")]
         public int ProblemId { get; set; }
 
+        public int Floor { get; set; }
+
         public virtual User Author { get; set; }
 
         [NotMapped]

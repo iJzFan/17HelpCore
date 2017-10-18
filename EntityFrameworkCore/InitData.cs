@@ -137,14 +137,16 @@ namespace HELP.BLL.EntityFrameworkCore
                     Body=Comment.PhoneGap_Comment_1_Body,
                     //CreateTime=Comment.PhoneGap_Comment_1_CreateTime,
                     UserId=yezi.Id,
-                    ProblemId=1
+                    ProblemId=1,
+                    Floor=1
 
                 },
                 new Entity.Comment
                 {
                     Body=Comment.PhoneGap_Reply_1_Body,
                     UserId=DK.Id,
-                    ProblemId=1
+                    ProblemId=1,
+                    Floor=2
                 }
             };
 

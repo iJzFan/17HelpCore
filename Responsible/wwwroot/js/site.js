@@ -1,37 +1,37 @@
 ﻿// Write your JavaScript code.
 $(document).ready(function () {
-    if (isVisitor()) {
-        //note:必须使用removeClass("hide")，不要使用show()
-        //bootstrap的.hide 标注了!important
-        $("[zyf-not-logon]").removeClass("hide");
-    } else {
-        $("[zyf-logon]").removeClass("hide");
-        var $currentCredit = $("[zyf-nav-current-credit]").text();
-        $("[zyf-current-credit]").text($currentCredit);
-        $("[zyf-hide-current-credit]").val($currentCredit);
-    }
+    //    if (isVisitor()) {
+    //note:必须使用removeClass("hide")，不要使用show()
+    //bootstrap的.hide 标注了!important
+    //        $("[zyf-not-logon]").removeClass("hide");
+    //   } else {
+    //        $("[zyf-logon]").removeClass("hide");
+    var $currentCredit = $("[zyf-nav-current-credit]").text();
+    $("[zyf-current-credit]").text($currentCredit);
+    $("[zyf-hide-current-credit]").val($currentCredit);
+//}
 
     $("[zyf-show-contact]").click(function () {
         var $modal = $("[zyf-global-modal]");
         $modal.find(".modal-title").html("联系方式");
         var $userId = $(this).attr("zyf-show-contact");
-        $.get("/Contact/_Show?userId=" + $userId, function (data) {
+        $.get("/Contact/Show/" + $userId, function (data) {
             $modal.find(".modal-body").html(data);
         })
         $("[zyf-global-modal]").modal('show');
     })
 })
 
-function isVisitor() {
-    return $.cookie().USER_ID == undefined;
-}
+//function isVisitor() {
+//    return $.cookie().USER_ID == undefined;
+//}
 
-function isCurrent(userId) {
-    if (isVisitor()) {
-        return false;
-    }
-    return $.cookie().USER_ID.split("&")[0] == userId;
-}
+//function isCurrent(userId) {
+//    if (isVisitor()) {
+//        return false;
+//    }
+//    return $.cookie().USER_ID.split("&")[0] == userId;
+//}
 
 function JqueryAjaxError(jqXHR, textStatus, errorThrown) {
     //TODO: 此处应收集一些用户本地信息，如时间/浏览器等……

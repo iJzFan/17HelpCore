@@ -29,7 +29,7 @@ namespace HELP.Service.ProductionService
         /// <returns>RecordModel</returns>
         public async Task<RecordModel> Get()
         {
-            return await Get(Convert.ToInt32((await GetCurrentUser()).Id));
+            return await Get((await GetCurrentUser()).Id);
         }
 
 
@@ -38,9 +38,9 @@ namespace HELP.Service.ProductionService
         /// </summary>
         /// <param name="userId">UserId</param>
         /// <returns>RecordModel</returns>
-        public async Task<RecordModel> Get(int userId)
+        public async Task<RecordModel> Get(string userId)
         {
-            var user = await _context.Users.Include(x=>x.contact).AsNoTracking().SingleOrDefaultAsync(x => x.Id == userId.ToString());
+            var user = await _context.Users.AsNoTracking().Include(x=>x.contact).SingleOrDefaultAsync(x => x.Id == userId);
             return new RecordModel
             {
                 QQ = user.contact.QQ,

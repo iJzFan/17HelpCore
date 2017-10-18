@@ -147,6 +147,7 @@ namespace HELP.UI.Responsible
             services.AddTransient<IEncrypt, SHA512Encrypt>();
             services.AddTransient<IContactService, ContactService>();
             services.AddTransient<ICreditService, CreditService>();
+            services.AddTransient<IBaseService, BaseService>();
 
         }
 
