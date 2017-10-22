@@ -23,26 +23,26 @@ namespace HELP.BLL.Entity
         [NotMapped]
         public virtual Problem Problem { get; set; }
 
-        public virtual void BeRewarded()
+        public virtual void BeRewarded(Problem problem)
         {
             Credit credit = new Credit
             {
-                Count = Problem.Reward,
+                Count = problem.Reward,
                 User = Author,
                 Description = string.Format(
                     "获得酬谢：<a href='/Problem/{0}' target='_blank'>{1}</a>",
-                    Problem.Id, Problem.Title)
+                    problem.Id, problem.Title)
             };
             credit.SetBalance();
             Author.CreditHistory.Add(credit);
 
-            if (Problem.RewardBest != null)
+            if (problem.RewardBest != null)
             {
                 throw new Exception(string.Format(
                     "不能在求助（Id={0}）上重复的进行酬谢。已酬谢评论Id={1}，现试图酬谢的Id={2}",
-                    Problem.Id, Problem.RewardBest.Id, Id));
+                    problem.Id, problem.RewardBest.Id, Id));
             }
-            Problem.RewardBest = this;
+            problem.RewardBest = this;
         }
 
     }

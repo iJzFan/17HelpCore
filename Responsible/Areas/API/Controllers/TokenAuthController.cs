@@ -43,11 +43,8 @@ namespace HELP.UI.Responsible.Areas.API.Controllers
         }
 
         #endregion
-/// <summary>
-/// Request UserName and Password
-/// </summary>
-/// <param name="model"></param>
-/// <returns></returns>
+
+
         [HttpPut]
         public async Task<IActionResult> Put(OnModel model)
         {
@@ -101,10 +98,8 @@ namespace HELP.UI.Responsible.Areas.API.Controllers
             });
             return handler.WriteToken(securityToken);
         }
-/// <summary>
-/// Need jwt token to access
-/// </summary>
-/// <returns></returns>
+
+
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpGet]
         public async Task<IActionResult> Get()

@@ -93,6 +93,7 @@ namespace HELP.Service.ProductionService
                 item.Body = comment.Body;
                 item.CreateTime = comment.CreateTime;
                 item.Floor = comment.Floor;
+                item.Id = comment.Id;
                 list.Add(item);
             }
 
@@ -203,8 +204,8 @@ namespace HELP.Service.ProductionService
         /// <returns></returns>
         public async Task<int> Reward(int commentId)
         {
-            var comment = await _context.Comments.Include(x=>x.Problem).Include(x=>x.Author).SingleOrDefaultAsync(x=>x.Id==commentId);
-
+            var comment = await _context.Comments.Include(x=>x.Author).ThenInclude(x=>x.CreditHistory).SingleOrDefaultAsync(x=>x.Id==commentId);
+            var problem = await _context.Problems.Where(x => x.Id == comment.ProblemId).SingleOrDefaultAsync();
             var currentUserId =(await GetCurrentUser()).Id;
 
             //不能自己酬谢自己
@@ -216,18 +217,18 @@ namespace HELP.Service.ProductionService
             }
 
             //不能在别人的求助上酬谢
-            if (comment.Problem.Author.Id != currentUserId)
+            if (problem.UserId != currentUserId)
             {
                 throw new Exception(string.Format(
                     "用户Id={0}试图在他不是作者的求助（Id={1}）上进行酬谢。酬谢的CommentId={2}"
-                    , currentUserId, comment.Problem.Id, commentId));
+                    , currentUserId, problem.UserId, commentId));
             }
 
-            comment.BeRewarded();
+            comment.BeRewarded(problem);
 
             await _context.SaveChangesAsync();
 
-            return comment.Problem.Reward;
+            return problem.Reward;
         }
 
         public async Task UpdatePicture(int problemId, string attachment)

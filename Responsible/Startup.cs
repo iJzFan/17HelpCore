@@ -1,5 +1,6 @@
 ﻿using HELP.BLL.Entity;
 using HELP.BLL.EntityFrameworkCore;
+using HELP.GlobalFile.Global;
 using HELP.GlobalFile.Global.Encryption;
 using HELP.GlobalFile.Global.Helper;
 using HELP.Service.ProductionService;
@@ -94,6 +95,12 @@ namespace HELP.UI.Responsible
                 auth.AddPolicy("Bearer", new AuthorizationPolicyBuilder()
                     .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme‌​)
                     .RequireAuthenticatedUser().Build());
+                auth.AddPolicy(
+                    "Admin",
+                    authBuilder =>
+                    {
+                        authBuilder.RequireClaim(ClaimTypes.Role, Role.admin.ToString());
+                    });
             });
 
             #endregion

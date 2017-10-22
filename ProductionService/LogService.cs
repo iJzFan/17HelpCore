@@ -49,7 +49,7 @@ namespace HELP.Service.ProductionService
         {
             var httpcontext = _httpContextAccessor.HttpContext;
             var user = await _context.Users.AsNoTracking().SingleOrDefaultAsync(x => x.Name == model.UserName);
-            var claimsIdentity = new ClaimsIdentity(new[] { new Claim(ClaimTypes.SerialNumber, user.Id), new Claim(ClaimTypes.Name, user.Name), new Claim(ClaimTypes.NameIdentifier, user.AuthCode) }, CookieAuthenticationDefaults.AuthenticationScheme);
+            var claimsIdentity = new ClaimsIdentity(new[] { new Claim(ClaimTypes.SerialNumber, user.Id), new Claim(ClaimTypes.Name, user.Name), new Claim(ClaimTypes.NameIdentifier, user.AuthCode), new Claim(ClaimTypes.Role, user.Role.ToString()) }, CookieAuthenticationDefaults.AuthenticationScheme);
             var principal = new ClaimsPrincipal(claimsIdentity);
             await httpcontext.SignInAsync(IdentityConstants.ApplicationScheme, principal, new AuthenticationProperties
             {

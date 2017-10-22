@@ -9,6 +9,11 @@
 @{
     string withReturnUrl = "?ReturnUrl=" + _httpContextAccessor.HttpContext.Request.Path;
     int id = Convert.ToInt32(Html.ViewContext.RouteData.Values["id"]);
+    string curentUserId = null;
+    if (_httpContextAccessor.HttpContext.User.Claims.Any())
+    {
+        curentUserId = _httpContextAccessor.HttpContext.User.Claims.ToList()[0].Value;
+    }
 }
 <h2 class="page-header">
     <span class="glyphicon glyphicon-question-sign descend-4px" aria-hidden="true"></span> @ViewBag.Title
@@ -27,7 +32,7 @@
 <br /><br /><hr />
 
 @await Component.InvokeAsync("Comments", id)
-@if (String.IsNullOrEmpty(_httpContextAccessor.HttpContext.User.Identity.Name))
+@if (String.IsNullOrEmpty(curentUserId))
 {
     <div style="border:2px dashed #eee; border-radius:4px 6px; padding: 10px 20px;">
         <span class="glyphicon glyphicon-warning-sign" style="color:yellowgreen;"></span>
@@ -55,9 +60,7 @@ else
 
 <script>
     $(document).ready(function () {
-
-        var problemUserId = @Model.Item.Author.Id;
-    if (isCurrent(problemUserId)) {
+        if ("@curentUserId" === "@Model.Item.Author.Id") {
         $("[zyf-problem-cancel]").removeClass("hide");
     }
     $("[zyf-problem-cancel]").click(function (event) {
@@ -80,7 +83,7 @@ else
     //求助人Id
     var seeker = $("[zyf-show-contact]").attr("zyf-show-contact");
     //如果当前用户是求助人，且问题仍然在等待帮助
-    if (isCurrent(seeker) && $("[zyf-wait-help]").length > 0) {
+    if (("@curentUserId" == seeker) && $("[zyf-wait-help]").length > 0) {
         //每一个“酬谢”按钮
         $("[zyf-reward]").each(function () {
             //留言作者的Id

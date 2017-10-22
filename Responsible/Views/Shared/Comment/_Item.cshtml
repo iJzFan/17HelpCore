@@ -3,7 +3,7 @@
 <div class="clearfix" style="margin:10px 0; clear:both; border-bottom:1px solid #eee;padding-bottom:5px;">
     <div>
         <small>@Model.CreateTime.ToString("yyyy:MM:dd HH:mm:ss")</small>
-        <a class="btn hide" zyf-reward="@Model.Author.Id" zyf-comment-id="@Model.Author.Id"><span class="glyphicon glyphicon-check"></span> 酬谢</a>
+        <a class="btn hide" zyf-reward="@Model.Author.Id" zyf-comment-id="@Model.Id"><span class="glyphicon glyphicon-check"></span> 酬谢</a>
     </div>
     <p>
         #@Model.Floor @Html.Raw(Model.Body.ParseEnter())
