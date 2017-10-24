@@ -14,6 +14,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Caching.Redis;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.PlatformAbstractions;
@@ -50,6 +52,8 @@ namespace HELP.UI.Responsible
 
             services.AddCors();
             services.AddMvc();
+
+            #region DbContext for MySql
             services.AddEntityFrameworkMySql().AddDbContext<EFDbContext>(options =>
             {
                 options.UseMySql(Configuration.GetConnectionString("MySqlConnection"),
@@ -59,16 +63,16 @@ namespace HELP.UI.Responsible
                         sqlOptions.CommandTimeout(10);
                     });
             },
-                        ServiceLifetime.Scoped  //Showing explicitly that the DbContext is shared across the HTTP request scope (graph of objects started in the HTTP request)
+                        ServiceLifetime.Scoped
                     );
+            #endregion
 
-            services.AddIdentity<User, IdentityRole>()
-                .AddEntityFrameworkStores<EFDbContext>()
-                .AddDefaultTokenProviders();
+            //services.AddIdentity<User, IdentityRole>()
+            //    .AddEntityFrameworkStores<EFDbContext>()
+            //    .AddDefaultTokenProviders();
 
             #region JWT
 
-            // Enable the use of an  [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]   attribute on methods and classes to protect.
             services.AddAuthentication().AddJwtBearer(cfg =>
             {
                 cfg.RequireHttpsMetadata = false;
@@ -90,6 +94,8 @@ namespace HELP.UI.Responsible
                 };
 
             });
+
+            //Authorize for Bearer or Admin
             services.AddAuthorization(auth =>
             {
                 auth.AddPolicy("Bearer", new AuthorizationPolicyBuilder()
@@ -120,6 +126,7 @@ namespace HELP.UI.Responsible
                );
             #endregion
 
+            #region Cookies
             services.ConfigureApplicationCookie(options =>
             {
                 options.Cookie.Name = CookieAuthenticationDefaults.AuthenticationScheme;
@@ -132,19 +139,28 @@ namespace HELP.UI.Responsible
                 // Requires `using Microsoft.AspNetCore.Authentication.Cookies;`
                 options.ReturnUrlParameter = CookieAuthenticationDefaults.ReturnUrlParameter;
             });
+            #endregion
 
-            // Adds a default in-memory implementation of IDistributedCache.
-            services.AddDistributedMemoryCache();
+            #region Redis & Session
+            services.AddDistributedRedisCache(option =>
+           {
+               //redis 数据库连接字符串
+               option.Configuration = Configuration.GetConnectionString("RedisConnection");
+
+               //redis 实例名
+               option.InstanceName = Configuration.GetConnectionString("RedisInstanceName");
+           });
 
             services.AddSession(options =>
             {
                 // Set a short timeout for easy testing.
-                options.IdleTimeout = TimeSpan.FromSeconds(10);
+                options.IdleTimeout = TimeSpan.FromMinutes(1);
                 options.Cookie.HttpOnly = true;
             });
-            #region
-
             #endregion
+
+            #region IOC
+
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<ILogService, LogService>();
             services.AddTransient<IProblemService, ProblemService>();
@@ -155,7 +171,7 @@ namespace HELP.UI.Responsible
             services.AddTransient<IContactService, ContactService>();
             services.AddTransient<ICreditService, CreditService>();
             services.AddTransient<IBaseService, BaseService>();
-
+            #endregion
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -187,9 +203,12 @@ namespace HELP.UI.Responsible
 
             app.UseMvc(routes =>
             {
+
+                #region API
                 routes.MapRoute(
-    name: "API",
-    template: "{area:exists}/{controller=Home}/{id?}");
+                        name: "API",
+                        template: "{area:exists}/{controller=Home}/{id?}");
+                #endregion
 
                 #region Problem
 
@@ -202,10 +221,15 @@ namespace HELP.UI.Responsible
 
                 #endregion
 
+                #region Default
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
+                #endregion
+
             });
+
+            #region Init DatbBase
             using (var scope = app.ApplicationServices.CreateScope())
             {
                 var context = scope.ServiceProvider
@@ -218,6 +242,7 @@ namespace HELP.UI.Responsible
                 }
 
             }
+            #endregion
 
         }
 

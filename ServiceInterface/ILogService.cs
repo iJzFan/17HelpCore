@@ -1,4 +1,5 @@
-﻿using HELP.Service.ViewModel.Log;
+﻿using HELP.BLL.Entity;
+using HELP.Service.ViewModel.Log;
 using Microsoft.AspNetCore.Http;
 using System.Threading.Tasks;
 
@@ -8,7 +9,7 @@ namespace HELP.Service.ServiceInterface
     {
        Task On(OnModel model,bool remember);
 
-        Task<string> GetPassword(string name);
+        Task<User> GetUser(string name);
 
         Task Off();
     }

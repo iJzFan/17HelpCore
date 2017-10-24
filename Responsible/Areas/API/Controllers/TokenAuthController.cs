@@ -16,6 +16,9 @@ using Microsoft.EntityFrameworkCore;
 using HELP.BLL.EntityFrameworkCore;
 using HELP.GlobalFile.Global.Helper;
 using HELP.BLL.Entity;
+using Microsoft.AspNetCore.Http;
+using HELP.UI.Responsible.WebHelp;
+using HELP.Service.ViewModel.Shared;
 
 namespace HELP.UI.Responsible.Areas.API.Controllers
 {
@@ -25,21 +28,17 @@ namespace HELP.UI.Responsible.Areas.API.Controllers
     {
         #region Constructor
 
-        private IRegisterService _registerService;
-        private IUserService _userService;
         private ILogService _logService;
         private IEncrypt _encrypt;
-        private EFDbContext _context;
+        private IHttpContextAccessor _httpContextAccessor;
 
-        public TokenAuthController(IRegisterService registerService,
-            IUserService userService,
-            ILogService logService, IEncrypt encrypt, EFDbContext context)
+        public TokenAuthController( IHttpContextAccessor httpContextAccessor,
+            ILogService logService, IEncrypt encrypt)
         {
-            _registerService = registerService;
-            _userService = userService;
+            
             _logService = logService;
             _encrypt = encrypt;
-            _context = context;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         #endregion
@@ -48,9 +47,25 @@ namespace HELP.UI.Responsible.Areas.API.Controllers
         [HttpPut]
         public async Task<IActionResult> Put(OnModel model)
         {
-            //User existUser = UserStorage.Users.FirstOrDefault(u => u.Username == user.Username && u.Password == user.Password);
-            var existUser = await _context.Users.AsNoTracking().SingleOrDefaultAsync(x => x.Name == model.UserName);
-            if (existUser != null)
+            if (!ModelState.IsValid)
+            {
+                return Json(ModelState.ValidationState);
+            }
+
+            var sessionImageCode = HttpContext.Session.GetString(ImageCodeHelper.SESSION_IMAGE_CODE);
+            model.ImageCode = ImageCodeHelper.CheckResult(model.ImageCode, sessionImageCode);
+            if (model.ImageCode.ImageCodeError != ImageCodeError.NoError)
+            {
+                return Json(new RequestResult
+                {
+                    State = RequestState.Failed,
+                    Msg = "验证码错误!"
+                });
+            }
+
+            var existUser = await _logService.GetUser(model.UserName);
+
+            if ((existUser != null) && (existUser.Password == _encrypt.Encrypt(model.Password)))
             {
 
                 var requestAt = DateTime.Now;
@@ -74,11 +89,12 @@ namespace HELP.UI.Responsible.Areas.API.Controllers
                 return Json(new RequestResult
                 {
                     State = RequestState.Failed,
-                    Msg = "Username or password is invalid"
+                    Msg = "用户名或密码错误!"
                 });
             }
         }
 
+        #region Method GenerateToken
         private string GenerateToken(User user, DateTime expires)
         {
             var handler = new JwtSecurityTokenHandler();
@@ -98,20 +114,16 @@ namespace HELP.UI.Responsible.Areas.API.Controllers
             });
             return handler.WriteToken(securityToken);
         }
+        #endregion
 
-
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpGet]
-        public async Task<IActionResult> Get()
+        public IActionResult Get()
         {
-            var claimsIdentity = User.Identity as ClaimsIdentity;
 
-            var user = await _context.Users.FirstOrDefaultAsync(x => x.Name == claimsIdentity.Name);
-            return Json(new RequestResult
-            {
-                State = RequestState.Success,
-                Data = new { UserName = claimsIdentity.Name, Credit = user.Creditpoints }
-            });
+            var imageCode = _httpContextAccessor.HttpContext.Request.Host + @"/Shared/GetImageCode";
+
+            return Json(new { imageCode });
+
         }
     }
 }

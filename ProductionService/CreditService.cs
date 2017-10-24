@@ -18,7 +18,7 @@ namespace HELP.Service.ProductionService
     public class CreditService : BaseService, ICreditService
     {
         #region Constructor
-        public CreditService(EFDbContext _context, IHttpContextAccessor _httpContextAccessor, IEncrypt _encrypt, UserManager<User> _userManager, SignInManager<User> _signInManager) : base(_context, _httpContextAccessor, _encrypt, _userManager, _signInManager)
+        public CreditService(EFDbContext _context, IHttpContextAccessor _httpContextAccessor, IEncrypt _encrypt) : base(_context, _httpContextAccessor, _encrypt)
         {
         }
         #endregion

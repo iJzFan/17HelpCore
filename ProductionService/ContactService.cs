@@ -17,7 +17,7 @@ namespace HELP.Service.ProductionService
     public class ContactService : BaseService, IContactService
     {
         #region Constructor
-        public ContactService(EFDbContext _context, IHttpContextAccessor _httpContextAccessor, IEncrypt _encrypt,UserManager<User> _userManager, SignInManager<User> _signInManager) : base(_context, _httpContextAccessor, _encrypt, _userManager, _signInManager)
+        public ContactService(EFDbContext _context, IHttpContextAccessor _httpContextAccessor, IEncrypt _encrypt) : base(_context, _httpContextAccessor, _encrypt)
         {
         }
         #endregion

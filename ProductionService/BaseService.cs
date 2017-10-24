@@ -22,16 +22,13 @@ namespace HELP.Service.ProductionService
         protected EFDbContext _context;
         protected IHttpContextAccessor _httpContextAccessor;
         protected IEncrypt _encrypt;
-        protected UserManager<User> _userManager;
-        protected SignInManager<User> _signInManager;
 
-        public BaseService(EFDbContext context, IHttpContextAccessor httpContextAccessor, IEncrypt encrypt, UserManager<User> userManager, SignInManager<User> signInManager)
+        public BaseService(EFDbContext context, IHttpContextAccessor httpContextAccessor, IEncrypt encrypt)
         {
             _context = context;
             _httpContextAccessor = httpContextAccessor;
             _encrypt = encrypt;
-            _userManager = userManager;
-            _signInManager = signInManager;
+
         }
         #endregion
 

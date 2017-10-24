@@ -20,7 +20,7 @@ namespace HELP.Service.ProductionService
     public class LogService : BaseService, ILogService
     {
         #region Constructor
-        public LogService(EFDbContext _context, IHttpContextAccessor _httpContextAccessor, IEncrypt _encrypt,UserManager<User> _userManager,SignInManager<User> _signInManager) : base(_context, _httpContextAccessor, _encrypt,_userManager,_signInManager)
+        public LogService(EFDbContext _context, IHttpContextAccessor _httpContextAccessor, IEncrypt _encrypt) : base(_context, _httpContextAccessor, _encrypt)
         {
 
         }
@@ -32,10 +32,10 @@ namespace HELP.Service.ProductionService
         /// </summary>
         /// <param name="name">用户名</param>
         /// <returns></returns>
-        public async Task<string> GetPassword(string name)
+        public async Task<User> GetUser(string name)
         {
             var user = await _context.Users.AsNoTracking().SingleOrDefaultAsync(x => x.Name == name);
-            return user.Password;
+            return user;
         }
 
 

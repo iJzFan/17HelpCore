@@ -18,7 +18,7 @@ namespace HELP.Service.ProductionService
     public class ProblemService : BaseService, IProblemService
     {
         #region Construtor
-        public ProblemService(EFDbContext _context, IHttpContextAccessor _httpContextAccessor, IEncrypt _encrypt, UserManager<User> _userManager, SignInManager<User> _signInManager) : base(_context, _httpContextAccessor, _encrypt, _userManager, _signInManager)
+        public ProblemService(EFDbContext _context, IHttpContextAccessor _httpContextAccessor, IEncrypt _encrypt) : base(_context, _httpContextAccessor, _encrypt)
         {
         }
         #endregion
