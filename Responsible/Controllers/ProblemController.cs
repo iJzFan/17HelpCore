@@ -1,4 +1,5 @@
 ﻿using HELP.GlobalFile.Global;
+using HELP.GlobalFile.Global.Helper;
 using HELP.Service.ServiceInterface;
 using HELP.Service.ViewModel.Problem;
 using Microsoft.AspNetCore.Authorization;
@@ -87,22 +88,18 @@ namespace HELP.UI.Responsible.Controllers
                 }
 
                 //把图片存储到磁盘
-                path = await save(model.Picture);
+                path = await FileHelper.Save(model.Picture,_env.WebRootPath);
             }
 
 
             //保存model和图片地址到数据库
-            await _problemService.Save(model, path); 
+            await _problemService.Save(model, user, path); 
 
             return RedirectToAction("Index");
 
         }
 
-        /// <summary>
-        /// 保存图片到本地
-        /// </summary>
-        /// <param name="picture"></param>
-        /// <returns></returns>
+
         private async Task<string> save(IFormFile picture)
         {
             DateTime now = DateTime.Now;

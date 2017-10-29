@@ -73,7 +73,7 @@ namespace HELP.UI.Responsible
 
             #region JWT
 
-            services.AddAuthentication().AddJwtBearer(cfg =>
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddJwtBearer(cfg =>
             {
                 cfg.RequireHttpsMetadata = false;
                 cfg.SaveToken = true;
@@ -93,6 +93,17 @@ namespace HELP.UI.Responsible
                     ClockSkew = TimeSpan.FromMinutes(0)
                 };
 
+            }).AddCookie(options =>
+            {
+                options.Cookie.Name = CookieAuthenticationDefaults.AuthenticationScheme;
+                options.Cookie.HttpOnly = true;
+                options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
+                options.LoginPath = "/Log/On";
+                options.LogoutPath = "/Log/Off";
+                options.AccessDeniedPath = "/Log/AccessDenied";
+                options.SlidingExpiration = true;
+                // Requires `using Microsoft.AspNetCore.Authentication.Cookies;`
+                options.ReturnUrlParameter = CookieAuthenticationDefaults.ReturnUrlParameter;
             });
 
             //Authorize for Bearer or Admin

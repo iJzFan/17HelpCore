@@ -1,4 +1,5 @@
-﻿using HELP.Service.ViewModel.Problem;
+﻿using HELP.BLL.Entity;
+using HELP.Service.ViewModel.Problem;
 using HELP.Service.ViewModel.Problem.Single;
 using System;
 using System.Threading.Tasks;
@@ -9,7 +10,7 @@ namespace HELP.Service.ServiceInterface
     {
         Task<(IndexModel index,int count)> Get(int id,int pagesize);
 
-        Task Save(NewModel model,string atattachment);
+        Task Save(NewModel model,User user,string atattachment);
 
         Task<ItemModel> GetItem(int id);
         Task<CommentsModel> GetComments(int id);

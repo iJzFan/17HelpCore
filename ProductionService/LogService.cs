@@ -51,7 +51,7 @@ namespace HELP.Service.ProductionService
             var user = await _context.Users.AsNoTracking().SingleOrDefaultAsync(x => x.Name == model.UserName);
             var claimsIdentity = new ClaimsIdentity(new[] { new Claim(ClaimTypes.SerialNumber, user.Id), new Claim(ClaimTypes.Name, user.Name), new Claim(ClaimTypes.NameIdentifier, user.AuthCode), new Claim(ClaimTypes.Role, user.Role.ToString()) }, CookieAuthenticationDefaults.AuthenticationScheme);
             var principal = new ClaimsPrincipal(claimsIdentity);
-            await httpcontext.SignInAsync(IdentityConstants.ApplicationScheme, principal, new AuthenticationProperties
+            await httpcontext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, new AuthenticationProperties
             {
                 ExpiresUtc = DateTime.UtcNow.AddHours(24),
                 IsPersistent = true,
@@ -75,7 +75,7 @@ namespace HELP.Service.ProductionService
            // {
             //    _httpContextAccessor.HttpContext.Response.Cookies.Delete(CookieName.USER_ID);
             //};
-            await _httpContextAccessor.HttpContext.SignOutAsync(IdentityConstants.ApplicationScheme);
+            await _httpContextAccessor.HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
         }
     }
 }

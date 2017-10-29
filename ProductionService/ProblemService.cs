@@ -140,9 +140,9 @@ namespace HELP.Service.ProductionService
         /// </summary>
         /// <param name="model"></param>
         /// <returns>porblem index</returns>
-        public async Task Save(NewModel model,string attachment)
+        public async Task Save(NewModel model,User user, string attachment)
         {
-            var user =await GetCurrentUser();
+            //var user =await GetCurrentUser();
 
             var problem = new Problem
             {
@@ -160,7 +160,7 @@ namespace HELP.Service.ProductionService
 
             await _context.Problems.AddAsync(problem);
             await _context.SaveChangesAsync();
-            await _context.Problems.Include(x=>x.Author).ThenInclude(x=>x.CreditHistory).LastOrDefaultAsync(x => x.UserId == user.Id);
+            //await _context.Problems.Include(x=>x.Author).ThenInclude(x=>x.CreditHistory).LastOrDefaultAsync(x => x.UserId == user.Id);
             problem.Publish();
             await _context.SaveChangesAsync();
         }
