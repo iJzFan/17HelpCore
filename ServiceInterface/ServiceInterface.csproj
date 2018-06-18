@@ -1,12 +1,12 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
     <RootNamespace>HELP.Service.ServiceInterface</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="microsoft.aspnetcore.http" Version="2.0.0" />
+    <PackageReference Include="microsoft.aspnetcore.http" Version="2.1.0" />
   </ItemGroup>
 
   <ItemGroup>
