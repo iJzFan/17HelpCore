@@ -3,95 +3,93 @@ using HELP.Service.ServiceInterface;
 using HELP.Service.ViewModel.Log;
 using HELP.Service.ViewModel.Shared;
 using HELP.UI.Responsible.WebHelp;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Distributed;
 using System.Threading.Tasks;
 
 namespace HELP.UI.Responsible.Controllers
 {
-    public class LogController : Controller
-    {
+	public class LogController : Controller
+	{
+		#region Constructor
 
-        #region Constructor
+		private IRegisterService _registerService;
+		private IUserService _userService;
+		private ILogService _logService;
+		private IEncrypt _encrypt;
+		private IDistributedCache _distributedCache;
 
-        private IRegisterService _registerService;
-        private IUserService _userService;
-        private ILogService _logService;
-        private IEncrypt _encrypt;
-        private IDistributedCache _distributedCache;
-        public LogController(IRegisterService registerService,
-            IUserService userService,
-            ILogService logService, IEncrypt encrypt, IDistributedCache distributedCache)
-        {
-            _registerService = registerService;
-            _userService = userService;
-            _logService = logService;
-            _encrypt = encrypt;
-            _distributedCache = distributedCache;
-        }
+		public LogController(IRegisterService registerService,
+			IUserService userService,
+			ILogService logService, IEncrypt encrypt, IDistributedCache distributedCache)
+		{
+			_registerService = registerService;
+			_userService = userService;
+			_logService = logService;
+			_encrypt = encrypt;
+			_distributedCache = distributedCache;
+		}
 
-        #endregion
+		#endregion Constructor
 
-        #region URL: /Log/On
+		#region URL: /Log/On
 
-        public IActionResult On(string returnUrl = null)
-        {
-            //await HttpContext.SignOutAsync(IdentityConstants.ApplicationScheme);
+		public IActionResult On(string returnUrl = null)
+		{
+			//await HttpContext.SignOutAsync(IdentityConstants.ApplicationScheme);
 
-            ViewData["ReturnUrl"] = returnUrl;
-            return View(new OnModel());
-        }
+			ViewData["ReturnUrl"] = returnUrl;
+			return View(new OnModel());
+		}
 
-        [HttpPost]
-        public async Task<IActionResult> On(OnModel model, bool remember, string returnUrl)
-        {
-            if (!ModelState.IsValid)
-            {
-                return View(model);
-            }
-            //var sessionImageCode = _distributedCache.GetString(ImageCodeHelper.SESSION_IMAGE_CODE);
-            var sessionImageCode = HttpContext.Session.GetString(ImageCodeHelper.SESSION_IMAGE_CODE);
-            model.ImageCode = ImageCodeHelper.CheckResult(model.ImageCode, sessionImageCode);
-            if (model.ImageCode.ImageCodeError != ImageCodeError.NoError)
-            {
-                return View(model);
-            }
+		[HttpPost]
+		public async Task<IActionResult> On(OnModel model, bool remember, string returnUrl)
+		{
+			if (!ModelState.IsValid)
+			{
+				return View(model);
+			}
+			//var sessionImageCode = _distributedCache.GetString(ImageCodeHelper.SESSION_IMAGE_CODE);
+			var sessionImageCode = HttpContext.Session.GetString(ImageCodeHelper.SESSION_IMAGE_CODE);
+			model.ImageCode = ImageCodeHelper.CheckResult(model.ImageCode, sessionImageCode);
+			if (model.ImageCode.ImageCodeError != ImageCodeError.NoError)
+			{
+				return View(model);
+			}
 
-            var existUser = await _logService.GetUser(model.UserName);
+			var existUser = await _logService.GetUser(model.UserName);
 
-            if (existUser != null && existUser.Password == _encrypt.Encrypt(model.Password))
-            {
-                await _logService.On(model, remember);
-                return ReturnUrlHelper.ReturnUrl(returnUrl);
-            }
+			if (existUser != null && existUser.Password == _encrypt.Encrypt(model.Password))
+			{
+				await _logService.On(model, remember);
+				return ReturnUrlHelper.ReturnUrl(returnUrl);
+			}
 
-            TempData["ModelState"] = "* 用户名或密码错误";
-            return View(model);
-        }
-        #endregion
+			TempData["ModelState"] = "* 用户名或密码错误";
+			return View(model);
+		}
 
-        #region URL:/Log/Off
-        public async Task<IActionResult> Off()
-        {
-            await _logService.Off();
+		#endregion URL: /Log/On
 
-            return Redirect("~/Log/On");
-        }
+		#region URL:/Log/Off
 
-        #endregion
+		public async Task<IActionResult> Off()
+		{
+			await _logService.Off();
 
-        #region URL: /Log/AccessDenied
+			return Redirect("~/Log/On");
+		}
 
-        public IActionResult AccessDenied()
-        {
+		#endregion URL:/Log/Off
 
-            return View();
-        }
-        #endregion
-    }
+		#region URL: /Log/AccessDenied
+
+		public IActionResult AccessDenied()
+		{
+			return View();
+		}
+
+		#endregion URL: /Log/AccessDenied
+	}
 }

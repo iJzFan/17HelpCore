@@ -6,7 +6,6 @@
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
  * ======================================================================== */
 
-
 +function ($) {
   'use strict';
 
@@ -17,10 +16,10 @@
     var el = document.createElement('bootstrap')
 
     var transEndEventNames = {
-      WebkitTransition : 'webkitTransitionEnd',
-      MozTransition    : 'transitionend',
-      OTransition      : 'oTransitionEnd otransitionend',
-      transition       : 'transitionend'
+      WebkitTransition: 'webkitTransitionEnd',
+      MozTransition: 'transitionend',
+      OTransition: 'oTransitionEnd otransitionend',
+      transition: 'transitionend'
     }
 
     for (var name in transEndEventNames) {
@@ -55,5 +54,4 @@
       }
     }
   })
-
 }(jQuery);

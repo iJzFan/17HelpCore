@@ -17,7 +17,6 @@
 		factory(jQuery);
 	}
 }(function ($) {
-
 	var pluses = /\+/g;
 
 	function encode(s) {
@@ -53,7 +52,6 @@
 	}
 
 	var config = $.cookie = function (key, value, options) {
-
 		// Write
 
 		if (value !== undefined && !$.isFunction(value)) {
@@ -113,5 +111,4 @@
 		$.cookie(key, '', $.extend({}, options, { expires: -1 }));
 		return !$.cookie(key);
 	};
-
 }));

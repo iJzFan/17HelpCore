@@ -25,37 +25,36 @@
                 <li><a href="/Problem/New" target="_blank"><span class="glyphicon glyphicon-question-sign"></span> 我要求助</a> </li>
                 <li><a href="/Problem" target="_blank"><span class="glyphicon glyphicon-list-alt"></span> 求助列表</a> </li>
                 @if (!string.IsNullOrEmpty(Model.UserName))
-    {
-            <li>
-                <a href="/Credit" target="_blank">
-                    <span class="glyphicon glyphicon-time"></span>
-                    时间币 <span zyf-nav-current-credit style="color:greenyellow;">@Model.Credit</span> 分钟
-                </a>
-            </li>
-}
+                {
+                    <li>
+                        <a href="/Credit" target="_blank">
+                            <span class="glyphicon glyphicon-time"></span>
+                            时间币 <span zyf-nav-current-credit style="color:greenyellow;">@Model.Credit</span> 分钟
+                        </a>
+                    </li>
+                }
                 @if (string.IsNullOrEmpty(Model.UserName))
-    {
-            <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-user"></span> 用户 <span class="caret"></span></a>
-                <ul class="dropdown-menu" role="menu">
-                    <li><a href="/Log/On@(withReturnUrl)"><span class="glyphicon glyphicon-log-in descend-2px"></span> 登录</a></li>
-                    <li><a href="/Register/Home@(withReturnUrl)"><span class="glyphicon glyphicon-registration-mark descend-2px"></span> 注册</a></li>
-                </ul>
-            </li>
-}
-else
-{
-            <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-user"></span> @Model.UserName<span class="caret"></span></a>
-                <ul class="dropdown-menu" role="menu">
-                    @*<li><a href="/Password/Change"><span class="glyphicon glyphicon-lock"></span> 修改密码</a></li>*@
-                    <li><a href="/Contact/Record@(withReturnUrl)"><span class="glyphicon glyphicon-phone-alt descend-2px"></span> 联系方式</a></li>
-                    <li><a href="/Log/Off@(withReturnUrl)"><span class="glyphicon glyphicon-log-out descend-2px"></span> 退出登录</a></li>
-                </ul>
-            </li>
-}
+                {
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-user"></span> 用户 <span class="caret"></span></a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="/Log/On@(withReturnUrl)"><span class="glyphicon glyphicon-log-in descend-2px"></span> 登录</a></li>
+                            <li><a href="/Register/Home@(withReturnUrl)"><span class="glyphicon glyphicon-registration-mark descend-2px"></span> 注册</a></li>
+                        </ul>
+                    </li>
+                }
+                else
+                {
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-user"></span> @Model.UserName<span class="caret"></span></a>
+                        <ul class="dropdown-menu" role="menu">
+                            @*<li><a href="/Password/Change"><span class="glyphicon glyphicon-lock"></span> 修改密码</a></li>*@
+                            <li><a href="/Contact/Record@(withReturnUrl)"><span class="glyphicon glyphicon-phone-alt descend-2px"></span> 联系方式</a></li>
+                            <li><a href="/Log/Off@(withReturnUrl)"><span class="glyphicon glyphicon-log-out descend-2px"></span> 退出登录</a></li>
+                        </ul>
+                    </li>
+                }
             </ul>
         </div>
     </div>
 </div>
-

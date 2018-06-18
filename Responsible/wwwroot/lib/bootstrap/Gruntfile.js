@@ -37,14 +37,13 @@ module.exports = function (grunt) {
 
   // Project configuration.
   grunt.initConfig({
-
     // Metadata.
     pkg: grunt.file.readJSON('package.json'),
     banner: '/*!\n' +
-            ' * Bootstrap v<%= pkg.version %> (<%= pkg.homepage %>)\n' +
-            ' * Copyright 2011-<%= grunt.template.today("yyyy") %> <%= pkg.author %>\n' +
-            ' * Licensed under the <%= pkg.license %> license\n' +
-            ' */\n',
+      ' * Bootstrap v<%= pkg.version %> (<%= pkg.homepage %>)\n' +
+      ' * Copyright 2011-<%= grunt.template.today("yyyy") %> <%= pkg.author %>\n' +
+      ' * Licensed under the <%= pkg.license %> license\n' +
+      ' */\n',
     jqueryCheck: configBridge.config.jqueryCheck.join('\n'),
     jqueryVersionCheck: configBridge.config.jqueryVersionCheck.join('\n'),
 
@@ -426,9 +425,7 @@ module.exports = function (grunt) {
         ]
       }
     }
-
   });
-
 
   // These plugins provide necessary tasks.
   require('load-grunt-tasks')(grunt, { scope: 'devDependencies' });
@@ -448,22 +445,22 @@ module.exports = function (grunt) {
   var testSubtasks = [];
   // Skip core tests if running a different subset of the test suite
   if (runSubset('core') &&
-      // Skip core tests if this is a Savage build
-      process.env.TRAVIS_REPO_SLUG !== 'twbs-savage/bootstrap') {
+    // Skip core tests if this is a Savage build
+    process.env.TRAVIS_REPO_SLUG !== 'twbs-savage/bootstrap') {
     testSubtasks = testSubtasks.concat(['dist-css', 'dist-js', 'csslint:dist', 'test-js', 'docs']);
   }
   // Skip HTML validation if running a different subset of the test suite
   if (runSubset('validate-html') &&
-      // Skip HTML5 validator on Travis when [skip validator] is in the commit message
-      isUndefOrNonZero(process.env.TWBS_DO_VALIDATOR)) {
+    // Skip HTML5 validator on Travis when [skip validator] is in the commit message
+    isUndefOrNonZero(process.env.TWBS_DO_VALIDATOR)) {
     testSubtasks.push('validate-html');
   }
   // Only run Sauce Labs tests if there's a Sauce access key
   if (typeof process.env.SAUCE_ACCESS_KEY !== 'undefined' &&
-      // Skip Sauce if running a different subset of the test suite
-      runSubset('sauce-js-unit') &&
-      // Skip Sauce on Travis when [skip sauce] is in the commit message
-      isUndefOrNonZero(process.env.TWBS_DO_SAUCE)) {
+    // Skip Sauce if running a different subset of the test suite
+    runSubset('sauce-js-unit') &&
+    // Skip Sauce on Travis when [skip sauce] is in the commit message
+    isUndefOrNonZero(process.env.TWBS_DO_SAUCE)) {
     testSubtasks.push('connect');
     testSubtasks.push('saucelabs-qunit');
   }

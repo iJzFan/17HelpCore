@@ -1,5 +1,4 @@
 ﻿using HELP.Service.ServiceInterface;
-using HELP.Service.ViewModel.Shared;
 using HELP.UI.Responsible.WebHelp;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -9,38 +8,35 @@ using Microsoft.Extensions.Caching.Distributed;
 
 namespace HELP.UI.Responsible.Controllers
 {
-    public class SharedController : Controller
-    {
-        #region Constructor
+	public class SharedController : Controller
+	{
+		#region Constructor
 
-        private ISharedService _sharedService;
-        private IHttpContextAccessor _httpContextAccessor;
-        private IDistributedCache _distributedCache;
-        public SharedController(ISharedService sharedService,IHttpContextAccessor httpContextAccessor, IDistributedCache distributedCache)
-        {
-            _sharedService = sharedService;
-            _httpContextAccessor = httpContextAccessor;
-            _distributedCache = distributedCache;
-        }
+		private ISharedService _sharedService;
+		private IHttpContextAccessor _httpContextAccessor;
+		private IDistributedCache _distributedCache;
 
-        #endregion
+		public SharedController(ISharedService sharedService, IHttpContextAccessor httpContextAccessor, IDistributedCache distributedCache)
+		{
+			_sharedService = sharedService;
+			_httpContextAccessor = httpContextAccessor;
+			_distributedCache = distributedCache;
+		}
 
-        #region _ImageCode
+		#endregion Constructor
 
-        public IActionResult GetImageCode()
-        {
-            string code = ImageCodeHelper.CreateValidateCode(4);
-            //_distributedCache.SetString(ImageCodeHelper.SESSION_IMAGE_CODE, code);
-            HttpContext.Session.SetString(ImageCodeHelper.SESSION_IMAGE_CODE, code);
-            byte[] bytes = ImageCodeHelper.CreateValidateGraphic(code);
+		#region _ImageCode
 
-            return File(bytes, @"image/jpeg");
-        }
+		public IActionResult GetImageCode()
+		{
+			string code = ImageCodeHelper.CreateValidateCode(4);
+			//_distributedCache.SetString(ImageCodeHelper.SESSION_IMAGE_CODE, code);
+			HttpContext.Session.SetString(ImageCodeHelper.SESSION_IMAGE_CODE, code);
+			byte[] bytes = ImageCodeHelper.CreateValidateGraphic(code);
 
-        #endregion
+			return File(bytes, @"image/jpeg");
+		}
 
-
-
-    }
+		#endregion _ImageCode
+	}
 }
-

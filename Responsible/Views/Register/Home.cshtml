@@ -11,14 +11,14 @@
     <div class="form-group">
         <label>用户名：（* 必填）</label>
         <div class="input-group">
-            <input asp-for="UserName" class = "form-control", placeholder = "不是昵称，是登录用户名" />
+            <input asp-for="UserName" class="form-control" , placeholder="不是昵称，是登录用户名" />
             <a class="input-group-addon" id="checkUserName"><span class="glyphicon glyphicon-search"></span> 检查</a>
         </div>
-        <span asp-validation-for="UserName" class="text-danger"/>
+        <span asp-validation-for="UserName" class="text-danger" />
     </div>
     <div class="form-group">
         <label>密码：（* 必填）</label>
-        <input asp-for="Password" type="password" class = "form-control", placeholder = "不少于4个字符"/>
+        <input asp-for="Password" type="password" class="form-control" , placeholder="不少于4个字符" />
         <span asp-validation-for="Password" class="text-danger" />
     </div>
     <div class="form-group">
@@ -34,7 +34,7 @@
         <a name="imageCode" /><a href="#" id="freshImgCode" style="font-size: 12px; display: none">
             看不清楚
         </a> <span id="imgCodeReminder" class="reminder">点击输入框显示</span>
-        <br/> <span asp-validation-for="ImageCode.InputImageCode" class="text-danger" />
+        <br /> <span asp-validation-for="ImageCode.InputImageCode" class="text-danger" />
 
         @Html.Partial("_ImageCode", Model.ImageCode)
     </div>
@@ -79,5 +79,3 @@
         })
     </script>
 }
-
-

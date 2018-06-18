@@ -2,8 +2,8 @@
 
 namespace HELP.Service.ServiceInterface
 {
-    public  interface IUserService
-    {
-        Task<bool> NameIsExistAsync(string name);
-    }
+	public interface IUserService
+	{
+		Task<bool> NameIsExistAsync(string name);
+	}
 }

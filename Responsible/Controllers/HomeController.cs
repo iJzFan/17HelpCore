@@ -1,44 +1,33 @@
-﻿using HELP.BLL.Entity;
-using HELP.BLL.EntityFrameworkCore;
-using HELP.Service.ServiceInterface;
-using HELP.UI.Responsible.Models;
-using Microsoft.AspNetCore.Identity;
+﻿using HELP.UI.Responsible.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System;
 using System.Diagnostics;
-using System.Security.Claims;
-using System.Threading.Tasks;
 
 namespace HELP.UI.Responsible.Controllers
 {
+	public class HomeController : Controller
+	{
+		public IActionResult Index()
+		{
+			return Redirect("/Problem/Index");
+		}
 
-    public class HomeController : Controller
-    {
+		public IActionResult About()
+		{
+			ViewData["Message"] = "ASP.NET Core 演示网站";
 
-        public IActionResult Index()
-        {
+			return View("About");
+		}
 
-            return Redirect("/Problem/Index");
-        }
+		public IActionResult Contact()
+		{
+			ViewData["Message"] = "唯一联系QQ:337845818.";
 
-        public IActionResult About()
-        {
-            ViewData["Message"] = "ASP.NET Core 演示网站";
+			return View();
+		}
 
-            return View("About");
-        }
-
-        public IActionResult Contact()
-        {
-            ViewData["Message"] = "唯一联系QQ:337845818.";
-
-            return View();
-        }
-
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
-    }
+		public IActionResult Error()
+		{
+			return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+		}
+	}
 }

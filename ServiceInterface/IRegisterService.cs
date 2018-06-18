@@ -3,8 +3,8 @@ using System.Threading.Tasks;
 
 namespace HELP.Service.ServiceInterface
 {
-    public interface IRegisterService
-    {
-        Task Do(HomeModel model);
-    }
+	public interface IRegisterService
+	{
+		Task Do(HomeModel model);
+	}
 }

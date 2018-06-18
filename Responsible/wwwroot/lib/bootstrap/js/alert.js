@@ -6,7 +6,6 @@
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
  * ======================================================================== */
 
-
 +function ($) {
   'use strict';
 
@@ -14,7 +13,7 @@
   // ======================
 
   var dismiss = '[data-dismiss="alert"]'
-  var Alert   = function (el) {
+  var Alert = function (el) {
     $(el).on('click', dismiss, this.close)
   }
 
@@ -23,7 +22,7 @@
   Alert.TRANSITION_DURATION = 150
 
   Alert.prototype.close = function (e) {
-    var $this    = $(this)
+    var $this = $(this)
     var selector = $this.attr('data-target')
 
     if (!selector) {
@@ -57,14 +56,13 @@
       removeElement()
   }
 
-
   // ALERT PLUGIN DEFINITION
   // =======================
 
   function Plugin(option) {
     return this.each(function () {
       var $this = $(this)
-      var data  = $this.data('bs.alert')
+      var data = $this.data('bs.alert')
 
       if (!data) $this.data('bs.alert', (data = new Alert(this)))
       if (typeof option == 'string') data[option].call($this)
@@ -73,9 +71,8 @@
 
   var old = $.fn.alert
 
-  $.fn.alert             = Plugin
+  $.fn.alert = Plugin
   $.fn.alert.Constructor = Alert
-
 
   // ALERT NO CONFLICT
   // =================
@@ -85,10 +82,8 @@
     return this
   }
 
-
   // ALERT DATA-API
   // ==============
 
   $(document).on('click.bs.alert.data-api', dismiss, Alert.prototype.close)
-
 }(jQuery);

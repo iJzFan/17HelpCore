@@ -1,5 +1,4 @@
-﻿using HELP.BLL.Entity;
-using HELP.BLL.EntityFrameworkCore;
+﻿using HELP.BLL.EntityFrameworkCore;
 using HELP.GlobalFile.Global;
 using HELP.GlobalFile.Global.Encryption;
 using HELP.GlobalFile.Global.Helper;
@@ -12,254 +11,248 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Distributed;
-using Microsoft.Extensions.Caching.Redis;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.PlatformAbstractions;
 using Microsoft.IdentityModel.Tokens;
 using Swashbuckle.AspNetCore.Swagger;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HELP.UI.Responsible
 {
-    public class Startup
-    {
-        public Startup(IHostingEnvironment env)
-        {
-            var builder = new ConfigurationBuilder()
-    .SetBasePath(env.ContentRootPath)
-    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-    .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
-    .AddEnvironmentVariables();
-            Configuration = builder.Build();
-        }
+	public class Startup
+	{
+		public Startup(IHostingEnvironment env)
+		{
+			var builder = new ConfigurationBuilder()
+	.SetBasePath(env.ContentRootPath)
+	.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+	.AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
+	.AddEnvironmentVariables();
+			Configuration = builder.Build();
+		}
 
-        public IConfiguration Configuration { get; }
+		public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
-        {
+		// This method gets called by the runtime. Use this method to add services to the container.
+		public void ConfigureServices(IServiceCollection services)
+		{
+			services.AddCors();
+			services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
-            services.AddCors();
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+			#region DbContext for MySql
 
-            #region DbContext for MySql
-            services.AddEntityFrameworkMySql().AddDbContext<EFDbContext>(options =>
-            {
-                options.UseMySql(Configuration.GetConnectionString("MySqlConnection"),
-                    mySqlOptionsAction: sqlOptions =>
-                    {
-                        sqlOptions.MigrationsAssembly(typeof(Startup).GetTypeInfo().Assembly.GetName().Name);
-                        sqlOptions.CommandTimeout(10);
-                    });
-            },
-                        ServiceLifetime.Scoped
-                    );
-            #endregion
+			services.AddEntityFrameworkMySql().AddDbContext<EFDbContext>(options =>
+			{
+				options.UseMySql(Configuration.GetConnectionString("MySqlConnection"),
+					mySqlOptionsAction: sqlOptions =>
+					{
+						sqlOptions.MigrationsAssembly(typeof(Startup).GetTypeInfo().Assembly.GetName().Name);
+						sqlOptions.CommandTimeout(10);
+					});
+			},
+						ServiceLifetime.Scoped
+					);
 
-            //services.AddIdentity<User, IdentityRole>()
-            //    .AddEntityFrameworkStores<EFDbContext>()
-            //    .AddDefaultTokenProviders();
+			#endregion DbContext for MySql
 
-            #region JWT
+			//services.AddIdentity<User, IdentityRole>()
+			//    .AddEntityFrameworkStores<EFDbContext>()
+			//    .AddDefaultTokenProviders();
 
-            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddJwtBearer(cfg =>
-            {
-                cfg.RequireHttpsMetadata = false;
-                cfg.SaveToken = true;
+			#region JWT
 
-                cfg.TokenValidationParameters = new TokenValidationParameters()
-                {
-                    IssuerSigningKey = TokenAuthOption.Key,
-                    ValidAudience = TokenAuthOption.Audience,
-                    ValidIssuer = TokenAuthOption.Issuer,
-                    // When receiving a token, check that we've signed it.
-                    ValidateIssuerSigningKey = true,
-                    // When receiving a token, check that it is still valid.
-                    ValidateLifetime = true,
-                    // This defines the maximum allowable clock skew - i.e. provides a tolerance on the token expiry time 
-                    // when validating the lifetime. As we're creating the tokens locally and validating them on the same 
-                    // machines which should have synchronised time, this can be set to zero. and default value will be 5minutes
-                    ClockSkew = TimeSpan.FromMinutes(0)
-                };
+			services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddJwtBearer(cfg =>
+			{
+				cfg.RequireHttpsMetadata = false;
+				cfg.SaveToken = true;
 
-            }).AddCookie(options =>
-            {
-                options.Cookie.Name = CookieAuthenticationDefaults.AuthenticationScheme;
-                options.Cookie.HttpOnly = true;
-                options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
-                options.LoginPath = "/Log/On";
-                options.LogoutPath = "/Log/Off";
-                options.AccessDeniedPath = "/Log/AccessDenied";
-                options.SlidingExpiration = true;
-                // Requires `using Microsoft.AspNetCore.Authentication.Cookies;`
-                options.ReturnUrlParameter = CookieAuthenticationDefaults.ReturnUrlParameter;
-            });
+				cfg.TokenValidationParameters = new TokenValidationParameters()
+				{
+					IssuerSigningKey = TokenAuthOption.Key,
+					ValidAudience = TokenAuthOption.Audience,
+					ValidIssuer = TokenAuthOption.Issuer,
+					// When receiving a token, check that we've signed it.
+					ValidateIssuerSigningKey = true,
+					// When receiving a token, check that it is still valid.
+					ValidateLifetime = true,
+					// This defines the maximum allowable clock skew - i.e. provides a tolerance on the token expiry time
+					// when validating the lifetime. As we're creating the tokens locally and validating them on the same
+					// machines which should have synchronised time, this can be set to zero. and default value will be 5minutes
+					ClockSkew = TimeSpan.FromMinutes(0)
+				};
+			}).AddCookie(options =>
+			{
+				options.Cookie.Name = CookieAuthenticationDefaults.AuthenticationScheme;
+				options.Cookie.HttpOnly = true;
+				options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
+				options.LoginPath = "/Log/On";
+				options.LogoutPath = "/Log/Off";
+				options.AccessDeniedPath = "/Log/AccessDenied";
+				options.SlidingExpiration = true;
+				// Requires `using Microsoft.AspNetCore.Authentication.Cookies;`
+				options.ReturnUrlParameter = CookieAuthenticationDefaults.ReturnUrlParameter;
+			});
 
-            //Authorize for Bearer or Admin
-            services.AddAuthorization(auth =>
-            {
-                auth.AddPolicy("Bearer", new AuthorizationPolicyBuilder()
-                    .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)
-                    .RequireAuthenticatedUser().Build());
-                auth.AddPolicy(
-                    "Admin",
-                    authBuilder =>
-                    {
-                        authBuilder.RequireClaim(ClaimTypes.Role, Role.admin.ToString());
-                    });
-            });
+			//Authorize for Bearer or Admin
+			services.AddAuthorization(auth =>
+			{
+				auth.AddPolicy("Bearer", new AuthorizationPolicyBuilder()
+					.AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)
+					.RequireAuthenticatedUser().Build());
+				auth.AddPolicy(
+					"Admin",
+					authBuilder =>
+					{
+						authBuilder.RequireClaim(ClaimTypes.Role, Role.admin.ToString());
+					});
+			});
 
-            #endregion
+			#endregion JWT
 
-            #region Swagger
+			#region Swagger
 
-            //添加Swagger.
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new Info
-                {
-                    Version = "v1",
-                    Title = "OPEN API"
-                });
-                c.OperationFilter<SwaggerFilter>();
-            }
-               );
-            #endregion
+			//添加Swagger.
+			services.AddSwaggerGen(c =>
+			{
+				c.SwaggerDoc("v1", new Info
+				{
+					Version = "v1",
+					Title = "OPEN API"
+				});
+				c.OperationFilter<SwaggerFilter>();
+			}
+			   );
 
-            #region Cookies
-            services.ConfigureApplicationCookie(options =>
-            {
-                options.Cookie.Name = CookieAuthenticationDefaults.AuthenticationScheme;
-                options.Cookie.HttpOnly = true;
-                options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
-                options.LoginPath = "/Log/On";
-                options.LogoutPath = "/Log/Off";
-                options.AccessDeniedPath = "/Log/AccessDenied";
-                options.SlidingExpiration = true;
-                // Requires `using Microsoft.AspNetCore.Authentication.Cookies;`
-                options.ReturnUrlParameter = CookieAuthenticationDefaults.ReturnUrlParameter;
-            });
-            #endregion
+			#endregion Swagger
 
-            #region Redis & Session
-            services.AddDistributedRedisCache(option =>
-           {
-               //redis 数据库连接字符串
-               option.Configuration = Configuration.GetConnectionString("RedisConnection");
+			#region Cookies
 
-               //redis 实例名
-               option.InstanceName = Configuration.GetConnectionString("RedisInstanceName");
-           });
+			services.ConfigureApplicationCookie(options =>
+			{
+				options.Cookie.Name = CookieAuthenticationDefaults.AuthenticationScheme;
+				options.Cookie.HttpOnly = true;
+				options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
+				options.LoginPath = "/Log/On";
+				options.LogoutPath = "/Log/Off";
+				options.AccessDeniedPath = "/Log/AccessDenied";
+				options.SlidingExpiration = true;
+				// Requires `using Microsoft.AspNetCore.Authentication.Cookies;`
+				options.ReturnUrlParameter = CookieAuthenticationDefaults.ReturnUrlParameter;
+			});
 
-            services.AddSession(options =>
-            {
-                // Set a short timeout for easy testing.
-                options.IdleTimeout = TimeSpan.FromMinutes(1);
-                options.Cookie.HttpOnly = true;
-            });
-            #endregion
+			#endregion Cookies
 
-            #region IOC
+			#region Redis & Session
 
-            services.AddTransient<IUserService, UserService>();
-            services.AddTransient<ILogService, LogService>();
-            services.AddTransient<IProblemService, ProblemService>();
-            services.AddTransient<IRegisterService, RegisterService>();
-            services.AddTransient<ISharedService, SharedService>();
-            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            services.AddTransient<IEncrypt, SHA512Encrypt>();
-            services.AddTransient<IContactService, ContactService>();
-            services.AddTransient<ICreditService, CreditService>();
-            services.AddTransient<IBaseService, BaseService>();
-            #endregion
-        }
+			services.AddDistributedRedisCache(option =>
+		   {
+			   //redis 数据库连接字符串
+			   option.Configuration = Configuration.GetConnectionString("RedisConnection");
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public async void Configure(IApplicationBuilder app, IHostingEnvironment env)
-        {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-                app.UseBrowserLink();
+			   //redis 实例名
+			   option.InstanceName = Configuration.GetConnectionString("RedisInstanceName");
+		   });
 
-            }
-            else
-            {
-                app.UseExceptionHandler("/Home/Error");
-            }
+			services.AddSession(options =>
+			{
+				// Set a short timeout for easy testing.
+				options.IdleTimeout = TimeSpan.FromMinutes(1);
+				options.Cookie.HttpOnly = true;
+			});
 
-            app.UseStaticFiles();
+			#endregion Redis & Session
 
-            app.UseSession();
+			#region IOC
 
-            app.UseAuthentication();
+			services.AddTransient<IUserService, UserService>();
+			services.AddTransient<ILogService, LogService>();
+			services.AddTransient<IProblemService, ProblemService>();
+			services.AddTransient<IRegisterService, RegisterService>();
+			services.AddTransient<ISharedService, SharedService>();
+			services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+			services.AddTransient<IEncrypt, SHA512Encrypt>();
+			services.AddTransient<IContactService, ContactService>();
+			services.AddTransient<ICreditService, CreditService>();
+			services.AddTransient<IBaseService, BaseService>();
 
-            //配置Swagger
-            app.UseSwagger();
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "OPENAPI V1");
-            });
+			#endregion IOC
+		}
 
-            app.UseMvc(routes =>
-            {
+		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+		public async void Configure(IApplicationBuilder app, IHostingEnvironment env)
+		{
+			if (env.IsDevelopment())
+			{
+				app.UseDeveloperExceptionPage();
+				app.UseBrowserLink();
+			}
+			else
+			{
+				app.UseExceptionHandler("/Home/Error");
+			}
 
-                #region API
-                routes.MapRoute(
-                        name: "API",
-                        template: "{area:exists}/{controller=Home}/{id?}");
-                #endregion
+			app.UseStaticFiles();
 
-                #region Problem
+			app.UseSession();
 
-                routes.MapRoute(
-                        name: "ProblemSingle",
-                        template: "Problem/{id}",
-                        defaults: new { controller = "Problem", action = "Single" },
-                        constraints: new { id = @"\d+" }
-                    );
+			app.UseAuthentication();
 
-                #endregion
+			//配置Swagger
+			app.UseSwagger();
+			app.UseSwaggerUI(c =>
+			{
+				c.SwaggerEndpoint("/swagger/v1/swagger.json", "OPENAPI V1");
+			});
 
-                #region Default
-                routes.MapRoute(
-                    name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
-                #endregion
+			app.UseMvc(routes =>
+			{
+				#region API
 
-            });
+				routes.MapRoute(
+						name: "API",
+						template: "{area:exists}/{controller=Home}/{id?}");
 
-            #region Init DatbBase
-            using (var scope = app.ApplicationServices.CreateScope())
-            {
-                var context = scope.ServiceProvider
-                .GetRequiredService<EFDbContext>();
-                await context.Database.EnsureCreatedAsync();
-                if (!await context.Users.AnyAsync())
-                {
-                    var init = new InitData(context);
-                    await init.Initialize();
-                }
+				#endregion API
 
-            }
-            #endregion
+				#region Problem
 
-        }
+				routes.MapRoute(
+						name: "ProblemSingle",
+						template: "Problem/{id}",
+						defaults: new { controller = "Problem", action = "Single" },
+						constraints: new { id = @"\d+" }
+					);
 
+				#endregion Problem
 
-    }
+				#region Default
+
+				routes.MapRoute(
+					name: "default",
+					template: "{controller=Home}/{action=Index}/{id?}");
+
+				#endregion Default
+			});
+
+			#region Init DatbBase
+
+			using (var scope = app.ApplicationServices.CreateScope())
+			{
+				var context = scope.ServiceProvider
+				.GetRequiredService<EFDbContext>();
+				await context.Database.EnsureCreatedAsync();
+				if (!await context.Users.AnyAsync())
+				{
+					var init = new InitData(context);
+					await init.Initialize();
+				}
+			}
+
+			#endregion Init DatbBase
+		}
+	}
 }
-
-

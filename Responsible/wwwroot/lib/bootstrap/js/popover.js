@@ -6,7 +6,6 @@
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
  * ======================================================================== */
 
-
 +function ($) {
   'use strict';
 
@@ -19,7 +18,7 @@
 
   if (!$.fn.tooltip) throw new Error('Popover requires tooltip.js')
 
-  Popover.VERSION  = '3.3.7'
+  Popover.VERSION = '3.3.7'
 
   Popover.DEFAULTS = $.extend({}, $.fn.tooltip.Constructor.DEFAULTS, {
     placement: 'right',
@@ -27,7 +26,6 @@
     content: '',
     template: '<div class="popover" role="tooltip"><div class="arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>'
   })
-
 
   // NOTE: POPOVER EXTENDS tooltip.js
   // ================================
@@ -41,8 +39,8 @@
   }
 
   Popover.prototype.setContent = function () {
-    var $tip    = this.tip()
-    var title   = this.getTitle()
+    var $tip = this.tip()
+    var title = this.getTitle()
     var content = this.getContent()
 
     $tip.find('.popover-title')[this.options.html ? 'html' : 'text'](title)
@@ -63,26 +61,25 @@
 
   Popover.prototype.getContent = function () {
     var $e = this.$element
-    var o  = this.options
+    var o = this.options
 
     return $e.attr('data-content')
       || (typeof o.content == 'function' ?
-            o.content.call($e[0]) :
-            o.content)
+        o.content.call($e[0]) :
+        o.content)
   }
 
   Popover.prototype.arrow = function () {
     return (this.$arrow = this.$arrow || this.tip().find('.arrow'))
   }
 
-
   // POPOVER PLUGIN DEFINITION
   // =========================
 
   function Plugin(option) {
     return this.each(function () {
-      var $this   = $(this)
-      var data    = $this.data('bs.popover')
+      var $this = $(this)
+      var data = $this.data('bs.popover')
       var options = typeof option == 'object' && option
 
       if (!data && /destroy|hide/.test(option)) return
@@ -93,9 +90,8 @@
 
   var old = $.fn.popover
 
-  $.fn.popover             = Plugin
+  $.fn.popover = Plugin
   $.fn.popover.Constructor = Popover
-
 
   // POPOVER NO CONFLICT
   // ===================
@@ -104,5 +100,4 @@
     $.fn.popover = old
     return this
   }
-
 }(jQuery);

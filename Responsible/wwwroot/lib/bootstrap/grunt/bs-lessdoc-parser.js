@@ -16,7 +16,6 @@ function markdown2html(markdownString) {
   return md.render(markdownString.trim()).slice(3, -5);
 }
 
-
 /*
 Mini-language:
   //== This is a normal heading, which starts a section. Sections group variables together.
@@ -31,7 +30,6 @@ Mini-language:
 
   All other lines are ignored completely.
 */
-
 
 var CUSTOMIZABLE_HEADING = /^[/]{2}={2}(.*)$/;
 var UNCUSTOMIZABLE_HEADING = /^[/]{2}-{2}(.*)$/;
@@ -232,6 +230,5 @@ Parser.prototype.parseVar = function () {
   this._tokenizer.unshift(variable);
   return null;
 };
-
 
 module.exports = Parser;

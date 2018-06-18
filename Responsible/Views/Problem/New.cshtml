@@ -9,43 +9,42 @@
 </h2>
 
 <form asp-controller="Problem" asp-action="New" method="post" enctype="multipart/form-data">
-        <div class="form-group">
-            <label>标题：（* 必填）</label>
-            <input asp-for="Title" class="form-control" placeholder="简明勒要，不超过255字"/>
-            <span asp-validation-for="Title" class="text-danger"></span>
-        </div>
-        <div class="form-group">
-            <label>说明：</label>
-            <textarea asp-for="Body" class="form-control" rows="8" placeholder="可以详细的描写遇到的困难……"></textarea>
-        </div>
-        <div class="form-group">
-            <label>上传图片（仅限jpg/png/gif）：</label>
-            <div class="input-group">
-                <input class="form-control" type="text" zyf-file-upload-text placeholder="页面提交时上传文件">
-                <span class="btn input-group-addon file_browser" zyf-file-upload-button>浏览</span>
-            </div>
-
-            <input type="file" asp-for="Picture" zyf-file-upload-really class="hide" accept="image/png,image/gif,image/jpeg" />
-            <br /> <span asp-validation-for="Picture" class="text-danger"></span>
-        </div>
-        <div class="form-group">
-            <label>悬赏：（现有<span zyf-current-credit class="credit"></span>分钟时间币）</label>
-            <div class="input-group">
-                <span class="input-group-addon"><span class="glyphicon glyphicon-time"></span> </span>
-                <input asp-for="Reward" class="form-control" placeholder="大于0的正整数" data_rule_creditEnough="[zyf-current-credit]" type="text"/>
-                <span class="input-group-addon">分钟</span>
-                <span class="input-group-addon">时间币</span>
-            </div>
-            <input id="CurrentCredit" name="CurrentCredit" type="hidden" value="null" zyf-hide-current-credit="0">
-            @*@Html.Hidden("CurrentCredit", null, new { zyf_hide_current_credit = "0" })*@
-            <br/><span asp-validation-for="Reward" class="text-danger"></span>
-        </div>
-        <div class="submit">
-            <input type="submit" class="btn btn-primary loading" value="提交" />
-            <input type="reset" class="btn btn-default" />
+    <div class="form-group">
+        <label>标题：（* 必填）</label>
+        <input asp-for="Title" class="form-control" placeholder="简明勒要，不超过255字" />
+        <span asp-validation-for="Title" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label>说明：</label>
+        <textarea asp-for="Body" class="form-control" rows="8" placeholder="可以详细的描写遇到的困难……"></textarea>
+    </div>
+    <div class="form-group">
+        <label>上传图片（仅限jpg/png/gif）：</label>
+        <div class="input-group">
+            <input class="form-control" type="text" zyf-file-upload-text placeholder="页面提交时上传文件">
+            <span class="btn input-group-addon file_browser" zyf-file-upload-button>浏览</span>
         </div>
 
-    </form>
+        <input type="file" asp-for="Picture" zyf-file-upload-really class="hide" accept="image/png,image/gif,image/jpeg" />
+        <br /> <span asp-validation-for="Picture" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label>悬赏：（现有<span zyf-current-credit class="credit"></span>分钟时间币）</label>
+        <div class="input-group">
+            <span class="input-group-addon"><span class="glyphicon glyphicon-time"></span> </span>
+            <input asp-for="Reward" class="form-control" placeholder="大于0的正整数" data_rule_creditEnough="[zyf-current-credit]" type="text" />
+            <span class="input-group-addon">分钟</span>
+            <span class="input-group-addon">时间币</span>
+        </div>
+        <input id="CurrentCredit" name="CurrentCredit" type="hidden" value="null" zyf-hide-current-credit="0">
+        @*@Html.Hidden("CurrentCredit", null, new { zyf_hide_current_credit = "0" })*@
+        <br /><span asp-validation-for="Reward" class="text-danger"></span>
+    </div>
+    <div class="submit">
+        <input type="submit" class="btn btn-primary loading" value="提交" />
+        <input type="reset" class="btn btn-default" />
+    </div>
+</form>
 @section scripts{
     <script>
         $(document).ready(function () {
@@ -65,10 +64,3 @@
         })
     </script>
 }
-
-
-
-
-
-
-

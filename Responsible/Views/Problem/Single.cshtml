@@ -17,7 +17,7 @@
 }
 <h2 class="page-header">
     <span class="glyphicon glyphicon-question-sign descend-4px" aria-hidden="true"></span> @ViewBag.Title
-    @if (!(Model.Item.HasReward??false))
+    @if (!(Model.Item.HasReward ?? false))
     {
         <a href="/Problem/Cancel?problemId=@id" class="btn btn-default hide" style="margin-left:20px;" zyf-problem-cancel>
             撤销 <span class="glyphicon glyphicon-remove"></span>
@@ -52,7 +52,6 @@ else
                 <input type="submit" class="btn btn-primary loading" value="回复" />
             </div>
         </form>
-
     </div>
 }
 
@@ -131,4 +130,3 @@ else
     //    alert("恭喜！评论发布成功。")
     //}
 </script>
-

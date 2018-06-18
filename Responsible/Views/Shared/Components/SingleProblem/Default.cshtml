@@ -5,11 +5,11 @@
 
 <small>@Model.CreateTime.ToString("yyyy:MM:dd HH:mm:ss")</small>
 @*<div class="h3">
-    <a href="/Problem/@Model.Id" target="_blank">@Model.Title</a>
-</div>
-<p style="margin-top:10px;">
-    @*TODO:*@
-    @*@Model.Body
+        <a href="/Problem/@Model.Id" target="_blank">@Model.Title</a>
+    </div>
+    <p style="margin-top:10px;">
+        @*TODO:*@
+@*@Model.Body
     </p>
     @if (!string.IsNullOrEmpty(Model.Attachment))
     {
@@ -22,7 +22,7 @@
         <span><label>求助：</label><a href="/User/Profile/@Model.Author.Id">@Model.Author.Name</a></span>
     </div>*@
 <div class="h3">
-    @if (Model.HasReward??false)
+    @if (Model.HasReward ?? false)
     {
         <span class="glyphicon glyphicon-ok-circle"></span>
     }
@@ -74,4 +74,3 @@
         <a href="/Problem/@Model.Id#comments" target="_blank" zyf-comment-count>@Model.CommentCount</a>
     </span>
 </div>
-
