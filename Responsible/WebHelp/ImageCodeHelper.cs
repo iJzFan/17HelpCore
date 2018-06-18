@@ -1,10 +1,10 @@
 ﻿using HELP.Service.ViewModel.Shared;
 using Microsoft.AspNetCore.Http;
 using System;
-using System.DrawingCore;
-using System.DrawingCore.Imaging;
 using System.IO;
 using System.Text;
+using System.Drawing.Imaging;
+using System.Drawing;
 
 namespace HELP.UI.Responsible.WebHelp
 {

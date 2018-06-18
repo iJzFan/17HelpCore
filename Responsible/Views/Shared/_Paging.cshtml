@@ -7,56 +7,56 @@
     }
     <div style="text-align:center">
         <ul class="pagination">
-            <li>@Html.ActionLink("首页", "Index", new { id = 1 }, new { @id = "left" })</li>
+            <li>@Html.ActionLink("首页", $"index", new { id = 1 }, new { @id = "left" })</li>
 
             @{
                 if (pageCount > 5 && page > 3 && page < pageCount - 1)
                 {
-                    <li>@Html.ActionLink((page - 2).ToString(), "index", new { id = page - 2 }, new { @id = page - 2 })</li>
-                    <li>@Html.ActionLink((page - 1).ToString(), "index", new { id = page - 1 }, new { @id = page - 1 })</li>
-                    <li class="active">@Html.ActionLink((page).ToString(), "index", new { id = page }, new { @id = page })</li>
-                    <li>@Html.ActionLink((page + 1).ToString(), "index", new { id = page + 1 }, new { @id = page + 1 })</li>
-                    <li>@Html.ActionLink((page + 2).ToString(), "index", new { id = page + 2 }, new { @id = page + 2 })</li>
+                    <li>@Html.ActionLink((page - 2).ToString(), $"index", new { id = page - 2 }, new { @id = page - 2 })</li>
+                    <li>@Html.ActionLink((page - 1).ToString(), $"index", new { id = page - 1 }, new { @id = page - 1 })</li>
+                    <li class="active">@Html.ActionLink((page).ToString(), $"index", new { id = page }, new { @id = page })</li>
+                    <li>@Html.ActionLink((page + 1).ToString(), $"index", new { id = page + 1 }, new { @id = page + 1 })</li>
+                    <li>@Html.ActionLink((page + 2).ToString(), $"index", new { id = page + 2 }, new { @id = page + 2 })</li>
                 }
                 else if (pageCount > 5 && page == pageCount - 1)
                 {
-                    <li>@Html.ActionLink((page - 3).ToString(), "index", new { id = page - 3 }, new { @id = page - 3 })</li>
-                    <li>@Html.ActionLink((page - 2).ToString(), "index", new { id = page - 2 }, new { @id = page - 2 })</li>
-                    <li>@Html.ActionLink((page - 1).ToString(), "index", new { id = page - 1 }, new { @id = page - 1 })</li>
-                    <li class="active">@Html.ActionLink((page).ToString(), "index", new { id = page }, new { @id = page })</li>
-                    <li>@Html.ActionLink((page + 1).ToString(), "index", new { id = page + 1 }, new { @id = page + 1 })</li>
+                    <li>@Html.ActionLink((page - 3).ToString(), $"index", new { id = page - 3 }, new { @id = page - 3 })</li>
+                    <li>@Html.ActionLink((page - 2).ToString(), $"index", new { id = page - 2 }, new { @id = page - 2 })</li>
+                    <li>@Html.ActionLink((page - 1).ToString(), $"index", new { id = page - 1 }, new { @id = page - 1 })</li>
+                    <li class="active">@Html.ActionLink((page).ToString(), $"index", new { id = page }, new { @id = page })</li>
+                    <li>@Html.ActionLink((page + 1).ToString(), $"index", new { id = page + 1 }, new { @id = page + 1 })</li>
                 }
                 else if (pageCount > 5 && page == pageCount)
                 {
-                    <li>@Html.ActionLink((page - 4).ToString(), "index", new { id = page - 4 }, new { @id = page - 4 })</li>
-                    <li>@Html.ActionLink((page - 3).ToString(), "index", new { id = page - 3 }, new { @id = page - 3 })</li>
-                    <li>@Html.ActionLink((page - 2).ToString(), "index", new { id = page - 2 }, new { @id = page - 2 })</li>
-                    <li>@Html.ActionLink((page - 1).ToString(), "index", new { id = page - 1 }, new { @id = page - 1 })</li>
-                    <li class="active">@Html.ActionLink((page).ToString(), "index", new { id = page }, new { @id = page })</li>
+                    <li>@Html.ActionLink((page - 4).ToString(), $"index", new { id = page - 4 }, new { @id = page - 4 })</li>
+                    <li>@Html.ActionLink((page - 3).ToString(), $"index", new { id = page - 3 }, new { @id = page - 3 })</li>
+                    <li>@Html.ActionLink((page - 2).ToString(), $"index", new { id = page - 2 }, new { @id = page - 2 })</li>
+                    <li>@Html.ActionLink((page - 1).ToString(), $"index", new { id = page - 1 }, new { @id = page - 1 })</li>
+                    <li class="active">@Html.ActionLink((page).ToString(), $"index", new { id = page }, new { @id = page })</li>
                 }
                 else if (pageCount > 5 && page == 1)
                 {
-                    <li class="active">@Html.ActionLink("1", "index", new { id = 1 }, new { @id = 1 })</li>
-                    <li>@Html.ActionLink("2", "index", new { id = 2 }, new { @id = 2 })</li>
-                    <li>@Html.ActionLink("3", "index", new { id = 3 }, new { @id = 3 })</li>
-                    <li>@Html.ActionLink("4", "index", new { id = 4 }, new { @id = 4 })</li>
-                    <li>@Html.ActionLink("5", "index", new { id = 5 }, new { @id = 5 })</li>
+                    <li class="active">@Html.ActionLink("1", $"index", new { id = 1 }, new { @id = 1 })</li>
+                    <li>@Html.ActionLink("2", $"index", new { id = 2 }, new { @id = 2 })</li>
+                    <li>@Html.ActionLink("3", $"index", new { id = 3 }, new { @id = 3 })</li>
+                    <li>@Html.ActionLink("4", $"index", new { id = 4 }, new { @id = 4 })</li>
+                    <li>@Html.ActionLink("5", $"index", new { id = 5 }, new { @id = 5 })</li>
                 }
                 else if (pageCount > 5 && page == 2)
                 {
-                    <li>@Html.ActionLink("1", "index", new { id = 1 }, new { @id = 1 })</li>
-                    <li class="active">@Html.ActionLink("2", "index", new { id = 2 }, new { @id = 2 })</li>
-                    <li>@Html.ActionLink("3", "index", new { id = 3 }, new { @id = 3 })</li>
-                    <li>@Html.ActionLink("4", "index", new { id = 4 }, new { @id = 4 })</li>
-                    <li>@Html.ActionLink("5", "index", new { id = 5 }, new { @id = 5 })</li>
+                    <li>@Html.ActionLink("1", $"index", new { id = 1 }, new { @id = 1 })</li>
+                    <li class="active">@Html.ActionLink("2", $"index", new { id = 2 }, new { @id = 2 })</li>
+                    <li>@Html.ActionLink("3", $"index", new { id = 3 }, new { @id = 3 })</li>
+                    <li>@Html.ActionLink("4", $"index", new { id = 4 }, new { @id = 4 })</li>
+                    <li>@Html.ActionLink("5", $"index", new { id = 5 }, new { @id = 5 })</li>
                 }
                 else if (pageCount > 5 && page == 3)
                 {
-                    <li>@Html.ActionLink("1", "index", new { id = 1 }, new { @id = 1 })</li>
-                    <li>@Html.ActionLink("2", "index", new { id = 2 }, new { @id = 2 })</li>
-                    <li class="active">@Html.ActionLink("3", "index", new { id = 3 }, new { @id = 3 })</li>
-                    <li>@Html.ActionLink("4", "index", new { id = 4 }, new { @id = 4 })</li>
-                    <li>@Html.ActionLink("5", "index", new { id = 5 }, new { @id = 5 })</li>
+                    <li>@Html.ActionLink("1", $"index", new { id = 1 }, new { @id = 1 })</li>
+                    <li>@Html.ActionLink("2", $"index", new { id = 2 }, new { @id = 2 })</li>
+                    <li class="active">@Html.ActionLink("3", $"index", new { id = 3 }, new { @id = 3 })</li>
+                    <li>@Html.ActionLink("4", $"index", new { id = 4 }, new { @id = 4 })</li>
+                    <li>@Html.ActionLink("5", $"index", new { id = 5 }, new { @id = 5 })</li>
                 }
                 else if (pageCount <= 5)
                 {
@@ -64,15 +64,15 @@
                     {
                         if (j == page)
                         {
-                            <li class="active">@Html.ActionLink(j.ToString(), "index", new { id = j }, new { @id = j })</li>
+                            <li class="active">@Html.ActionLink(j.ToString(), $"index", new { id = j }, new { @id = j })</li>
                         }
                         else
                         {
-                            <li>@Html.ActionLink(j.ToString(), "index", new { id = j }, new { @id = j })</li>
+                            <li>@Html.ActionLink(j.ToString(), $"index", new { id = j }, new { @id = j })</li>
                         }
                     }
                 }
-                <li>@Html.ActionLink("尾页", "index", new { id = pageCount }, new { @id = "right" })</li>
+                <li>@Html.ActionLink("尾页", $"index", new { id = pageCount }, new { @id = "right" })</li>
             }
         </ul>
     </div>

@@ -6,18 +6,17 @@ namespace HELP.BLL.Entity
 {
     public class BaseEntity
     {
-        private DateTime _CreateTime;
-        public BaseEntity()
+		public BaseEntity()
         {
             SetCreateTime();
         }
         public int Id { get; set; }
 
-        public DateTime CreateTime { get { return _CreateTime; } }
+		public DateTime CreateTime { get; private set; }
 
-        internal virtual void SetCreateTime()
+		internal virtual void SetCreateTime()
         {
-            _CreateTime = DateTime.Now;
+            CreateTime = DateTime.Now;
         }
     }
 }
