@@ -27,7 +27,7 @@ namespace HELP.UI.Responsible
 	{
 		public Startup(IHostingEnvironment env)
 		{
-			var builder = new ConfigurationBuilder()
+			IConfigurationBuilder builder = new ConfigurationBuilder()
 	.SetBasePath(env.ContentRootPath)
 	.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
 	.AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
@@ -148,14 +148,14 @@ namespace HELP.UI.Responsible
 
 			#region Redis & Session
 
-			services.AddDistributedRedisCache(option =>
-		   {
-			   //redis 数据库连接字符串
-			   option.Configuration = Configuration.GetConnectionString("RedisConnection");
+			//services.AddDistributedRedisCache(option =>
+			//  {
+			//   //redis 数据库连接字符串
+			//   option.Configuration = Configuration.GetConnectionString("RedisConnection");
 
-			   //redis 实例名
-			   option.InstanceName = Configuration.GetConnectionString("RedisInstanceName");
-		   });
+			//   //redis 实例名
+			//   option.InstanceName = Configuration.GetConnectionString("RedisInstanceName");
+			//  });
 
 			services.AddSession(options =>
 			{
@@ -240,14 +240,14 @@ namespace HELP.UI.Responsible
 
 			#region Init DatbBase
 
-			using (var scope = app.ApplicationServices.CreateScope())
+			using (IServiceScope scope = app.ApplicationServices.CreateScope())
 			{
-				var context = scope.ServiceProvider
+				EFDbContext context = scope.ServiceProvider
 				.GetRequiredService<EFDbContext>();
 				await context.Database.EnsureCreatedAsync();
 				if (!await context.Users.AnyAsync())
 				{
-					var init = new InitData(context);
+					InitData init = new InitData(context);
 					await init.Initialize();
 				}
 			}

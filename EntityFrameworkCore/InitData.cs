@@ -38,9 +38,9 @@ namespace HELP.BLL.EntityFrameworkCore
 		/// </summary>
 		public async Task AddUser()
 		{
-			var yezi = InitUsers.Register("yezi");
-			var DK = InitUsers.Register("DK");
-			var TCreditIndex = InitUsers.Register("TCreditIndex");
+			Entity.User yezi = InitUsers.Register("yezi");
+			Entity.User DK = InitUsers.Register("DK");
+			Entity.User TCreditIndex = InitUsers.Register("TCreditIndex");
 			yezi.SetAuthCode();
 			DK.SetAuthCode();
 			TCreditIndex.SetAuthCode();
@@ -55,9 +55,9 @@ namespace HELP.BLL.EntityFrameworkCore
 		/// </summary>
 		public async Task AddProblems()
 		{
-			var yezi = await _context.Users.Where(x => x.Name == "yezi").FirstOrDefaultAsync();
-			var DK = await _context.Users.Where(x => x.Name == "DK").FirstOrDefaultAsync();
-			var list = new List<Entity.Problem>()
+			Entity.User yezi = await _context.Users.Where(x => x.Name == "yezi").FirstOrDefaultAsync();
+			Entity.User DK = await _context.Users.Where(x => x.Name == "DK").FirstOrDefaultAsync();
+			List<Entity.Problem> list = new List<Entity.Problem>()
 			{
 				new Entity.Problem
 			{
@@ -102,16 +102,18 @@ namespace HELP.BLL.EntityFrameworkCore
 			};
 			for (int i = 1; i < 20; i++)
 			{
-				var fakeproblem = new Entity.Problem();
-				fakeproblem.Body = "Fakeproblem" + i.ToString();
-				fakeproblem.Title = "FakeTitle" + i.ToString();
-				fakeproblem.SetPrivateFieldInBase("_CreateTime", DateTime.Now.AddDays(-i));
+				Entity.Problem fakeproblem = new Entity.Problem
+				{
+					Body = "Fakeproblem" + i.ToString(),
+					Title = "FakeTitle" + i.ToString()
+				};
+				fakeproblem.SetPrivateFieldInBase("<CreateTime>k__BackingField", DateTime.Now.AddDays(-i));
 				fakeproblem.UserId = yezi.Id;
 				fakeproblem.Reward = i;
 				list.Add(fakeproblem);
 			}
 
-			foreach (var problem in list)
+			foreach (Entity.Problem problem in list)
 			{
 				await _context.Problems.AddAsync(problem);
 				await _context.SaveChangesAsync();
@@ -123,9 +125,9 @@ namespace HELP.BLL.EntityFrameworkCore
 		/// </summary>
 		public async Task AddComments()
 		{
-			var yezi = await _context.Users.Where(x => x.Name == "yezi").FirstOrDefaultAsync();
-			var DK = await _context.Users.Where(x => x.Name == "DK").FirstOrDefaultAsync();
-			var list = new List<Entity.Comment>
+			Entity.User yezi = await _context.Users.Where(x => x.Name == "yezi").FirstOrDefaultAsync();
+			Entity.User DK = await _context.Users.Where(x => x.Name == "DK").FirstOrDefaultAsync();
+			List<Entity.Comment> list = new List<Entity.Comment>
 			{
 				new Entity.Comment
 				{
@@ -144,7 +146,7 @@ namespace HELP.BLL.EntityFrameworkCore
 				}
 			};
 
-			foreach (var comment in list)
+			foreach (Entity.Comment comment in list)
 			{
 				await _context.Comments.AddAsync(comment);
 				await _context.SaveChangesAsync();
@@ -217,10 +219,12 @@ namespace HELP.BLL.EntityFrameworkCore
 
 		public static Entity.User Register(string name)
 		{
-			var user = new Entity.User();
-			user.Name = name;
-			user.Password = password;
-			user.contact = new Entity.Contact();
+			Entity.User user = new Entity.User
+			{
+				Name = name,
+				Password = password,
+				contact = new Entity.Contact()
+			};
 
 			return user;
 		}
@@ -249,14 +253,14 @@ namespace HELP.BLL.EntityFrameworkCore
 	{
 		public static Entity.Credit SaveCredit(int count, string description, DateTime create, EFDbContext _context)
 		{
-			var index = _context.Users.Where(x => x.Name == "TCreditIndex").FirstOrDefault();
-			var credit = new Entity.Credit
+			Entity.User index = _context.Users.Where(x => x.Name == "TCreditIndex").FirstOrDefault();
+			Entity.Credit credit = new Entity.Credit
 			{
 				Count = count,
 				Description = description,
 				UserId = index.Id
 			};
-			credit.SetPrivateFieldInBase("_CreateTime", create);
+			credit.SetPrivateFieldInBase("<CreateTime>k__BackingField", create);
 
 			return credit;
 		}
